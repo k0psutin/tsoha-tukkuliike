@@ -57,7 +57,7 @@ Asiakas: `asiakas/1234`
 
 <br>
 
-[Käyttöohjeet](/doc/kayttoohje.md)  
 [Tietokanta](/doc/db.md)  
-[Asennusohje](/doc/asennusohje.md)  
-[Käyttötapaukset](/doc/kayttotapaukset.md)
+Käyttöohjeet  
+Asennusohje  
+Käyttötapaukset
