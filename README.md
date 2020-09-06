@@ -8,11 +8,11 @@ Tällä järjestelmällä on esimerkiksi mahdollista jäljittää toimintoja kut
 
 ### Toiminnot
 
-Osto pystyy luomaan tilauksia muille tukkureille, ja ostokuorman saapuessa tukkuliikkeeseen, logistiikka huolehtii kuormasta.
+Osto pystyy luomaan tilauksia muille tukkureille, luomaan uusia tuotteita, ja ostokuorman saapuessa tukkuliikkeeseen, logistiikka huolehtii kuormasta.
 
-Logistiikka pystyy siirtämään saapuvat kuormat tukun saldolle, jolloin kuormalle luodaan sisäiseen käyttöön ja jäljitykseen käytettävä eränumero.
+Logistiikka vastaa tuotteiden inventoinnista, sekä saapuneiden kuormien kirjaamisesta tukun tietokantaan.
 
-Myynti kirjaa saamansa hypoteettiset tilaukset järjestelmään, jolloin keräilijä pystyy keräämään asiakkaalle lähtevän kuorman, ja kuittaamaan tämän kerätyksi.
+Myynti luo uusia asiakkaita, sekä kirjaa asiakkailta saamiaan hypoteettisia tilauksia tietokantaan.
 
 Keräily vastaa ostotilausten tuotteiden (oikein) keräämisestä, ja valmiiden tilausten kuittaamisesta.
 
