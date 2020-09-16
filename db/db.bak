@@ -1,0 +1,665 @@
+--
+-- PostgreSQL database dump
+--
+
+-- Dumped from database version 13beta3
+-- Dumped by pg_dump version 13beta3
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+--
+-- Name: adminpack; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS adminpack WITH SCHEMA pg_catalog;
+
+
+--
+-- Name: EXTENSION adminpack; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION adminpack IS 'administrative functions for PostgreSQL';
+
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- Name: batches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.batches (
+    batch_id integer NOT NULL,
+    batch_nr text NOT NULL,
+    company_id integer NOT NULL,
+    item_id integer NOT NULL,
+    qty integer,
+    date timestamp without time zone,
+    user_id integer NOT NULL
+);
+
+
+--
+-- Name: batches_batch_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.batches_batch_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: batches_batch_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.batches_batch_id_seq OWNED BY public.batches.batch_id;
+
+
+--
+-- Name: batchorders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.batchorders (
+    batchorder_id integer NOT NULL,
+    order_id text NOT NULL,
+    batch_nr text NOT NULL,
+    qty integer NOT NULL,
+    item_id integer NOT NULL
+);
+
+
+--
+-- Name: batchorders_batchorder_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.batchorders_batchorder_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: batchorders_batchorder_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.batchorders_batchorder_id_seq OWNED BY public.batchorders.batchorder_id;
+
+
+--
+-- Name: companies; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.companies (
+    company_id integer NOT NULL,
+    compname text NOT NULL,
+    address text NOT NULL,
+    email text NOT NULL,
+    country text,
+    route smallint
+);
+
+
+--
+-- Name: companies_company_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.companies_company_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: companies_company_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.companies_company_id_seq OWNED BY public.companies.company_id;
+
+
+--
+-- Name: items; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.items (
+    item_id integer NOT NULL,
+    itemname text NOT NULL,
+    price numeric NOT NULL,
+    closed boolean
+);
+
+
+--
+-- Name: items_item_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.items_item_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: items_item_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.items_item_id_seq OWNED BY public.items.item_id;
+
+
+--
+-- Name: orders; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.orders (
+    id integer NOT NULL,
+    order_id text NOT NULL,
+    company_id integer NOT NULL,
+    item_id integer NOT NULL,
+    supply boolean,
+    orderdate timestamp without time zone NOT NULL,
+    dispatchdate timestamp without time zone,
+    qty integer NOT NULL,
+    price numeric NOT NULL,
+    user_id integer NOT NULL
+);
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.orders_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.orders_id_seq OWNED BY public.orders.id;
+
+
+--
+-- Name: shipments; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.shipments (
+    shipment_id integer NOT NULL,
+    order_id text NOT NULL,
+    batchorder_id integer NOT NULL,
+    user_id integer NOT NULL,
+    done timestamp without time zone NOT NULL,
+    collected boolean
+);
+
+
+--
+-- Name: shipments_shipment_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.shipments_shipment_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: shipments_shipment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.shipments_shipment_id_seq OWNED BY public.shipments.shipment_id;
+
+
+--
+-- Name: users; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.users (
+    user_id integer NOT NULL,
+    username text NOT NULL,
+    pswd text NOT NULL,
+    auth_lvl smallint NOT NULL,
+    company_id integer
+);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.users_user_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.users_user_id_seq OWNED BY public.users.user_id;
+
+
+--
+-- Name: batches batch_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.batches ALTER COLUMN batch_id SET DEFAULT nextval('public.batches_batch_id_seq'::regclass);
+
+
+--
+-- Name: batchorders batchorder_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.batchorders ALTER COLUMN batchorder_id SET DEFAULT nextval('public.batchorders_batchorder_id_seq'::regclass);
+
+
+--
+-- Name: companies company_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.companies ALTER COLUMN company_id SET DEFAULT nextval('public.companies_company_id_seq'::regclass);
+
+
+--
+-- Name: items item_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.items ALTER COLUMN item_id SET DEFAULT nextval('public.items_item_id_seq'::regclass);
+
+
+--
+-- Name: orders id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders ALTER COLUMN id SET DEFAULT nextval('public.orders_id_seq'::regclass);
+
+
+--
+-- Name: shipments shipment_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shipments ALTER COLUMN shipment_id SET DEFAULT nextval('public.shipments_shipment_id_seq'::regclass);
+
+
+--
+-- Name: users user_id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.users_user_id_seq'::regclass);
+
+
+--
+-- Data for Name: batches; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.batches (batch_id, batch_nr, company_id, item_id, qty, date, user_id) FROM stdin;
+3	CN090920PE	7	25	0	2020-09-09 14:10:12.461964	1
+1	T7080920MM	11	2	11	2020-09-08 22:32:38.312674	1
+6	MY100920BR	4	7	126	2020-09-10 08:50:13.407812	1
+7	BN100920BR	4	8	54	2020-09-10 08:50:21.402202	1
+5	BN100920FR	15	8	45	2020-09-10 08:49:48.445766	1
+2	TE090920CN	24	24	34	2020-09-09 12:54:40.311423	1
+4	CN090920SI	8	25	265	2020-09-09 22:15:55.445475	1
+\.
+
+
+--
+-- Data for Name: batchorders; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.batchorders (batchorder_id, order_id, batch_nr, qty, item_id) FROM stdin;
+11	4219231	MY100920BR	2	7
+13	4219231	BN100920BR	2	8
+12	4219231	BN100920FR	6	8
+14	6146631	TE090920CN	33	24
+15	6146631	CN090920SI	33	25
+\.
+
+
+--
+-- Data for Name: companies; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.companies (company_id, compname, address, email, country, route) FROM stdin;
+1	Blistex Inc	945 Cherokee Street	glyffe0@istockphoto.com	JP	4
+2	Apotheca Company	228 Hayes Crossing	zcoldicott1@chronoengine.com	PE	4
+3	China Ningbo Shangge Cosmetic Technology Corp	360 Quincy Park	kmaliffe2@exblog.jp	JP	5
+4	Dharma Research, inc.	09 Thierer Road	hlaughtisse3@abc.net.au	BR	2
+5	Golden State Medical Supply, Inc.	1 Moland Point	gdomokos4@booking.com	SI	1
+6	Taro Pharmaceuticals U.S.A., Inc.	378 Bayside Hill	pdrohun5@nih.gov	PH	3
+7	A-S Medication Solutions LLC	5 Lien Terrace	glabusch6@thetimes.co.uk	PE	3
+8	Medline Industries, Inc.	7 Stoughton Point	cpache7@blinklist.com	SI	4
+9	SHISEIDO CO., LTD.	3 Basil Parkway	mshepherdson8@admin.ch	HT	2
+10	Rebel Distributors Corp.	64 Brown Parkway	nironmonger9@gmpg.org	CN	4
+11	JHP Pharmaceuticals, LLC	03 Cascade Circle	hchella@nih.gov	MM	4
+12	Nelco Laboratories, Inc.	9 Lakeland Center	aaughtieb@biglobe.ne.jp	CO	1
+13	Paddock Laboratories, LLC	2 Sugar Hill	rmacgraithc@livejournal.com	CN	5
+14	Qualitest Pharmaceuticals	9 Lyons Point	lleupoldtd@weibo.com	ET	4
+15	clinique laboratories inc	1381 Melby Junction	ddallistone@freewebs.com	FR	1
+16	Physicians Total Care, Inc.	6465 Starling Street	kspennockf@etsy.com	RU	5
+17	Pamlab, L.L.C.	57 Muir Pass	mtuffieldg@toplist.cz	PL	5
+18	Advanced Skin Technology, LLC	22 Miller Circle	gdredgeh@com.com	CN	4
+19	Bryant Ranch Prepack	462 Delladonna Plaza	rgrattani@cafepress.com	CY	3
+20	American Sales Company	36983 Corry Street	fpickstonj@bizjournals.com	AX	1
+21	Johnson & Johnson Consumer Products Company, Division of Johnson & Johnson Consumer Companies, Inc.	3483 Morrow Parkway	tmacavaddyk@ehow.com	PH	1
+22	State of Florida DOH Central Pharmacy	53 Elka Circle	rhendonsonl@ted.com	ID	1
+23	Preferred Pharmaceuticals, Inc	836 Weeping Birch Road	cbuskem@com.com	JP	1
+24	US WorldMeds, LLC	140 Mandrake Junction	frolinsonn@smugmug.com	CN	2
+25	Unifirst First Aid Corporation	46514 Algoma Place	cternaulto@omniture.com	PT	4
+\.
+
+
+--
+-- Data for Name: items; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.items (item_id, itemname, price, closed) FROM stdin;
+1	MEGACE	1.51	f
+2	Treatment Set TS348237	3.46	f
+3	Acacia	0.96	f
+4	Oxygen	3.31	f
+5	Billiousness	2.76	f
+6	ShopRite Day Calm	3.25	f
+7	Milk of Magnesia Wild Cherry	3.96	f
+8	BEBULIN	3.65	f
+9	Ziprasidone Hydrochloride	3.05	f
+10	Lovastatin	3.33	f
+11	GUNA-ALLERGY-PREV	0.6	f
+12	Halls	4.9	f
+13	Truvada	4.08	f
+14	Teething Pain	0.77	f
+15	ARIMIDEX	0.71	f
+16	Pramipexole Dihydrochloride	4.65	f
+17	Potassium Chloride	4.48	f
+18	Western White Pine	4.3	f
+19	Instant Hand Sanitizer	2.65	f
+20	Zyprexa	0.51	f
+21	Hoarse Cough	3.1	f
+22	Menstrual Relief	3.48	f
+23	Hydrocodone Bitartrate and Acetaminophen	0.95	f
+24	Triamcinolone Acetonide	2.33	f
+25	Cefazolin	2.6	f
+26	Beer	1.23	f
+\.
+
+
+--
+-- Data for Name: orders; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.orders (id, order_id, company_id, item_id, supply, orderdate, dispatchdate, qty, price, user_id) FROM stdin;
+1126	2838343	19	17	t	2019-10-08 15:06:46	\N	72	1.85	4
+1127	5316085	9	1	t	2020-06-08 17:32:25	\N	59	1.57	4
+1128	2361570	12	23	t	2019-12-21 03:50:02	\N	83	1.83	4
+1129	5780130	3	18	t	2020-06-17 05:38:05	\N	20	1.74	4
+1130	1847060	16	11	t	2020-07-30 23:21:04	\N	84	0.81	4
+1132	2897377	22	23	t	2020-05-18 07:06:52	\N	54	0.53	4
+1133	6098635	21	23	t	2019-10-14 17:58:53	\N	18	1.72	4
+1134	5867383	6	10	t	2020-09-04 20:41:48	\N	91	1.37	4
+1136	6091405	7	10	t	2019-12-30 01:42:46	\N	71	1.01	4
+1138	6038245	1	17	t	2020-08-03 02:11:10	\N	99	1.94	4
+1139	2880436	24	13	t	2020-03-13 21:08:45	\N	13	1.74	4
+1141	3763218	2	19	t	2020-06-15 11:18:12	\N	72	0.66	4
+1142	5780752	21	23	t	2020-06-10 14:27:41	\N	17	0.8	4
+1143	6531975	6	10	t	2020-05-08 13:02:35	\N	57	0.81	4
+1144	5335462	15	17	t	2019-11-24 12:57:04	\N	22	1.77	4
+1145	6102257	25	17	t	2019-09-07 13:37:02	\N	26	1.12	4
+1146	1179795	20	1	t	2019-12-23 00:24:47	\N	44	0.56	4
+1147	6243348	21	9	t	2019-11-11 17:10:35	\N	59	1.19	4
+1148	2951735	14	13	t	2019-12-27 01:12:16	\N	81	1.33	4
+1149	2539244	7	23	t	2020-01-08 11:38:29	\N	117	1.72	4
+1150	3874611	5	3	t	2019-10-27 02:28:49	\N	48	1.61	4
+1140	1422575	11	2	t	2019-09-03 22:58:52	\N	0	1.88	4
+1175	6146631	17	24	f	2020-09-09 11:04:07.640314	2020-09-10 11:04:07.640314	33	76.89	6
+1176	6146631	17	25	f	2020-09-09 11:04:07.640314	2020-09-10 11:04:07.640314	33	85.8	6
+1131	3534323	24	24	t	2019-10-25 01:12:22	\N	0	1.67	4
+1135	5582622	7	25	t	2020-02-07 05:51:14	\N	0	0.9	4
+1180	1040725	4	9	t	2020-09-09 21:51:35.973925	2020-09-10 21:51:35.973925	94	0.78	4
+1177	0399942	8	25	t	2020-09-09 21:48:06.216219	2020-09-10 21:48:06.216219	0	0.43	4
+1181	4219231	17	7	f	2020-09-09 23:27:22.209899	2020-09-10 23:27:22.209899	2	7.92	6
+1182	4219231	17	8	f	2020-09-09 23:27:22.209899	2020-09-10 23:27:22.209899	15	54.75	6
+1183	4219231	17	9	f	2020-09-09 23:27:22.209899	2020-09-10 23:27:22.209899	3	9.15	6
+1137	4249544	15	8	t	2019-12-23 18:40:45	\N	0	0.97	4
+1178	0532833	4	7	t	2020-09-09 21:51:35.973925	2020-09-10 21:51:35.973925	0	1.12	4
+1179	4634333	4	8	t	2020-09-09 21:51:35.973925	2020-09-10 21:51:35.973925	167	1.03	4
+\.
+
+
+--
+-- Data for Name: shipments; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.shipments (shipment_id, order_id, batchorder_id, user_id, done, collected) FROM stdin;
+1	6146631	14	2	2020-09-10 14:04:19.105054	f
+2	6146631	15	2	2020-09-10 14:04:19.105054	f
+\.
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
+--
+
+COPY public.users (user_id, username, pswd, auth_lvl, company_id) FROM stdin;
+1	varasto	pbkdf2:sha256:150000$7igSzBKb$34bb633f05bf3ea49ec78d0312a282a111e7e9e0aaa66cfa4cd8fea1a4ef849f	2	\N
+2	keraily	pbkdf2:sha256:150000$g2bsEmcq$a618b67daddb86e4ecceee3736b7fd8989c3aaa05aeea9f43f0062ca0f85ba66	3	\N
+3	myynti	pbkdf2:sha256:150000$MtU2PXXi$3ff60b700f60b4ad3b99e721da67d44f8eca5d67dac126f07b32c25cbe31e684	4	\N
+4	osto	pbkdf2:sha256:150000$7Bjb98Le$98f8a7623e5806528bd8aae6841ae499695af945a9b68c4e334e24489b105deb	5	\N
+5	admin	pbkdf2:sha256:150000$F1lxBXs6$aac3395ce18a9ab3080c7b730c0437abe1a8ac8b46fb3f6199bab16bad789171	6	\N
+6	asiakas	pbkdf2:sha256:150000$gIYwSqNi$2075a6d901645193ddfe6957286cc0bae266f3565a8ee4181b2f0f746de8c0b3	1	17
+\.
+
+
+--
+-- Name: batches_batch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.batches_batch_id_seq', 7, true);
+
+
+--
+-- Name: batchorders_batchorder_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.batchorders_batchorder_id_seq', 15, true);
+
+
+--
+-- Name: companies_company_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.companies_company_id_seq', 25, true);
+
+
+--
+-- Name: items_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.items_item_id_seq', 26, true);
+
+
+--
+-- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.orders_id_seq', 1183, true);
+
+
+--
+-- Name: shipments_shipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.shipments_shipment_id_seq', 2, true);
+
+
+--
+-- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
+--
+
+SELECT pg_catalog.setval('public.users_user_id_seq', 6, true);
+
+
+--
+-- Name: batches batches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.batches
+    ADD CONSTRAINT batches_pkey PRIMARY KEY (batch_id);
+
+
+--
+-- Name: batchorders batchorders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.batchorders
+    ADD CONSTRAINT batchorders_pkey PRIMARY KEY (batchorder_id);
+
+
+--
+-- Name: companies companies_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.companies
+    ADD CONSTRAINT companies_pkey PRIMARY KEY (company_id);
+
+
+--
+-- Name: items items_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.items
+    ADD CONSTRAINT items_pkey PRIMARY KEY (item_id);
+
+
+--
+-- Name: orders orders_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT orders_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: shipments shipments_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shipments
+    ADD CONSTRAINT shipments_pkey PRIMARY KEY (shipment_id);
+
+
+--
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT users_pkey PRIMARY KEY (user_id);
+
+
+--
+-- Name: order_id_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX order_id_idx ON public.orders USING btree (order_id);
+
+
+--
+-- Name: shipments fk_batchorder_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shipments
+    ADD CONSTRAINT fk_batchorder_id FOREIGN KEY (batchorder_id) REFERENCES public.batchorders(batchorder_id);
+
+
+--
+-- Name: orders fk_company; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT fk_company FOREIGN KEY (company_id) REFERENCES public.companies(company_id);
+
+
+--
+-- Name: batches fk_company; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.batches
+    ADD CONSTRAINT fk_company FOREIGN KEY (company_id) REFERENCES public.companies(company_id);
+
+
+--
+-- Name: orders fk_item; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT fk_item FOREIGN KEY (item_id) REFERENCES public.items(item_id);
+
+
+--
+-- Name: batchorders fk_item_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.batchorders
+    ADD CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES public.items(item_id);
+
+
+--
+-- Name: orders fk_user; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
+    ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- Name: batches fk_user; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.batches
+    ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- Name: shipments fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.shipments
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
