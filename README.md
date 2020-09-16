@@ -56,8 +56,9 @@ Keräily:
 <br>
 
 Kontrolleri:  
-[ ] Pääsee joka osa-alueelle  
-[ ] Voi luoda käyttäjiä  
+[x] Pääsee joka osa-alueelle  
+[x] Voi luoda käyttäjiä
+[ ] Voi muokata myyntitilauksia, varastosaldoja, tuotetilauksia  
 [ ] Näkee yhteenvetoja myynneistä, ostoista jne.
 
 <br>
