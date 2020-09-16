@@ -66,10 +66,10 @@ def get_order_total(order_id):
     return result.fetchone()[0]
 
 
-# TODO check that there is no duplicate orders_id
-def create_sale_order(company_id, order_list, qty, user_id):
+def create_sale_order(company_id, order_list, qty_list, price_list, user_id):
     random_number = str(randint(0, 9999999))
     order_id = random_number.zfill(7)
+    empty_price_list = (len(price_list) == 0)
 
     sql = "SELECT order_id FROM orders WHERE order_id = :order_id"
     result = db.session.execute(sql, {"order_id": order_id})
@@ -80,20 +80,37 @@ def create_sale_order(company_id, order_list, qty, user_id):
     inserts = []
 
     for i in range(len(order_list)):
-        if int(qty[i]) < 0:
+        if int(qty_list[i]) < 0:
             flash("Negative quantity is not allowed.")
             return 0
 
-        insert = {'order_id': order_id,
-                  'company_id': company_id,
-                  'item_id': order_list[i],
-                  'qty': qty[i],
-                  'user_id': user_id}
+        if empty_price_list:
+            insert = {'order_id': order_id,
+                      'company_id': company_id,
+                      'item_id': order_list[i],
+                      'qty': qty_list[i],
+                      'user_id': user_id}
+        else:
+            if float(price_list[i]) < 0:
+                flash("Negative price is not allowed.")
+                return 0
+
+            insert = {'order_id': order_id,
+                      'company_id': company_id,
+                      'item_id': order_list[i],
+                      'qty': qty_list[i],
+                      'price': float(qty_list[i]) * float(price_list[i]),
+                      'user_id': user_id}
 
         inserts.append(insert)
 
-    sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id) 
+    if empty_price_list:
+        sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id) 
              VALUES (:order_id, :company_id, :item_id, FALSE, NOW(), NOW() + INTERVAL '1 DAY', :qty, (SELECT SUM(:qty*items.price*1.0)::float FROM items WHERE item_id = :item_id), :user_id);"""
+
+    else:
+        sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id) 
+             VALUES (:order_id, :company_id, :item_id, FALSE, NOW(), NOW() + INTERVAL '1 DAY', :qty, :price, :user_id);"""
 
     db.session.execute(sql, inserts)
     db.session.commit()
