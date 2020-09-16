@@ -43,19 +43,25 @@ def place_order():
     if session["csrf_token"] != request.form["csrf_token"]:
         abort(403)
     order_list = list(filter(None, request.form.getlist("item_id")))
-    qty = list(filter(None, request.form.getlist("qty")))
+    qty_list = list(filter(None, request.form.getlist("qty")))
+    price_list = list(filter(None, request.form.getlist("price")))
     company_id = request.form["company_id"]
+
+    if company_id in (None, ''):
+        flash("Company id can't be empty.")
+        return redirect("/")
 
     order_id = orders.create_sale_order(
         company_id,
         order_list,
-        qty,
+        qty_list,
+        price_list,
         users.get_user_id())
 
     if order_id == 0:
         return redirect("/")
 
-    return redirect("company/order_summary/%s" % (order_id))
+    return redirect("/order_summary/%s" % (order_id))
 
 
 @app.route("/list_sale_orders")
@@ -77,7 +83,7 @@ def order_summary(order_id):
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 1 and session["auth_lvl"] != 4:
         abort(403)
 
-    return render_template("order_summary.html",
+    return render_template("company/order_summary.html",
                            order_id=order_id,
                            total=orders.get_order_total(order_id),
                            company=orders.get_company_by_order_id(order_id),

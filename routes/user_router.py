@@ -19,6 +19,14 @@ def login():
     return redirect("/")
 
 
+@app.route("/create_new_user_form")
+def create_user_form():
+    if session["auth_lvl"] != 6:
+        abort(403)
+
+    return render_template("user/create_new_user_form.html")
+
+
 @app.route("/create_new_user", methods=["POST"])
 def create_new_user():
     if session["auth_lvl"] != 6:
@@ -32,8 +40,18 @@ def create_new_user():
     password_check = request.form["password_check"]
     auth_lvl = request.form["auth_lvl"]
 
+    if len(username) < 4:
+        flash("Username must be at least 4 characters long.")
+        return redirect("/create_new_user_form")
+
+    if len(password) < 4:
+        flash("Password must be at least 4 characters long.")
+        return redirect("/create_new_user_form")
+
     if password != password_check:
-        return redirect("/")
+        flash("Passwords doesn't match.")
+        return redirect("/create_new_user_form")
     else:
+        flash("User %s created succesfully." % username)
         users.create_user(username, password, auth_lvl)
-    return redirect("/")
+    return redirect("/create_new_user_form")
