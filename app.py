@@ -10,3 +10,4 @@ import routes.collector_router
 import routes.sales_router
 import routes.buyer_router
 import routes.user_router
+import routes.controller_router
