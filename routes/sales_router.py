@@ -32,7 +32,7 @@ def create_company_user():
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 4:
         abort(403)
 
-    return render_template("create_company_user.html")
+    return render_template("user/create_company_user.html")
 
 
 @app.route("/place_order", methods=["POST"])
@@ -55,21 +55,21 @@ def place_order():
     if order_id == 0:
         return redirect("/")
 
-    return redirect("/order_summary/%s" % (order_id))
+    return redirect("company/order_summary/%s" % (order_id))
 
 
 @app.route("/list_sale_orders")
 def list_sale_orders():
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 4:
         abort(403)
-    return render_template("list_sale_orders.html", orders=orders.get_all_sale_orders(True))
+    return render_template("sale/list_sale_orders.html", orders=orders.get_all_sale_orders(True))
 
 
 @app.route("/place_company_order")
 def place_company_order():
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 4:
         abort(403)
-    return render_template("sales_order_form.html", items=item.get_all_items())
+    return render_template("sale/sales_order_form.html", items=item.get_all_items())
 
 
 @app.route("/order_summary/<string:order_id>")

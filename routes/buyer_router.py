@@ -6,19 +6,27 @@ import db_interfaces.item as item
 import db_interfaces.orders as orders
 
 
-@app.route("/show_items")
+@app.route("/list_supply_orders")
+def list_supply_orders():
+    if session["auth_lvl"] != 6 and session["auth_lvl"] != 5 and session["auth_lvl"] != 4:
+        abort(403)
+
+    return render_template("buyer/list_supply_orders.html", orders=orders.get_all_supply_orders())
+
+
+@app.route("/list_items")
 def items():
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 5 and session["auth_lvl"] != 4:
         abort(403)
 
-    return render_template("items.html", items=item.get_items())
+    return render_template("buyer/list_items.html", items=item.get_all_items())
 
 
 @app.route("/new_item_form")
 def new_item_form():
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 5:
         abort(403)
-    return render_template("new_item_form.html")
+    return render_template("buyer/new_item_form.html")
 
 
 @app.route("/add_new_item", methods=["POST"])
@@ -32,14 +40,14 @@ def add_new_item():
     price = request.form["price"]
     item.add_item(itemname, price)
 
-    return redirect("/new_item_form")
+    return redirect("buyer/new_item_form")
 
 
 @app.route("/supply_order_form")
 def supply_order_form():
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 5:
         abort(403)
-    return render_template("supply_order_form.html", items=item.get_all_items())
+    return render_template("buyer/supply_order_form.html", items=item.get_all_items())
 
 
 @app.route("/place_supply_order", methods=["POST"])

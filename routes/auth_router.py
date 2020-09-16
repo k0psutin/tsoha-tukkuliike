@@ -34,24 +34,24 @@ def error():
 
 
 def customer():
-    return render_template("company_order.html", company_id=users.get_company_id(), items=item.get_all_items())
+    return render_template("company/company_order.html", company_id=users.get_company_id(), items=item.get_all_items())
 
 
 def logistic():
-    return render_template("logistics.html", orders=orders.get_all_supply_orders())
+    return render_template("logistic/logistics.html", orders=orders.get_all_supply_orders())
 
 
 def collector():
-    return render_template("collector.html", orders=orders.get_all_sale_orders(), batches=logistics.get_all_batches())
+    return render_template("collector/collector.html", orders=orders.get_all_sale_orders(), batches=logistics.get_all_batches())
 
 
 def sales():
-    return render_template("sales.html")
+    return render_template("sale/sales.html")
 
 
 def buyer():
-    return render_template("supply_order.html")
+    return render_template("buyer/buyer.html")
 
 
 def controller():
-    return render_template("controller.html")
+    return render_template("controller/controller.html")

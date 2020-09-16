@@ -39,7 +39,7 @@ def collect_order(order_id):
     if session["auth_lvl"] != 6 and session["auth_lvl"] != 3:
         abort(403)
 
-    return render_template("collect_order.html",
+    return render_template("collector/collect_order.html",
                            order_id=order_id,
                            orderdetails=orders.get_sale_order(order_id),
                            batches=logistics.get_all_batches())
