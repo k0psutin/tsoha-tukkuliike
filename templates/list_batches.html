@@ -1,0 +1,19 @@
+<h1>Batches</h1>
+<table>
+  <tr>
+    <th>Batch nr.</th>
+    <th>Company id</th>
+    <th>Quantity</th>
+    <th>Date</th>
+  </tr>
+  {% for batch in batches %}
+  <tr>
+    <th>{{ batch[0] }}</th>
+    <th>{{ batch[1] }}</th>
+    <th>{{ batch[2] }}</th>
+    <th>{{ batch[3].strftime('%Y-%m-%d') }}</th>
+  </tr>
+  {% endfor %}
+</table>
+<br />
+<a href="/">back</a>

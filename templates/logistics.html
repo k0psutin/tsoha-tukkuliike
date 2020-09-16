@@ -1,0 +1,52 @@
+<title>Logistics</title>
+
+<h1>Virtual view of incoming orders</h1>
+<table>
+  <tr>
+    <th>Order id</th>
+    <th>Supplier id</th>
+    <th>Supplier name</th>
+    <th>Countrycode</th>
+    <th>Order date</th>
+    <th>Item id</th>
+    <th>Item name</th>
+    <th>Item qty</th>
+  </tr>
+  {% for order in orders %}
+  <tr>
+    <th>{{ order[0] }}</th>
+    <th>{{ order[1] }}</th>
+    <th>{{ order[2] }}</th>
+    <th>{{ order[3] }}</th>
+    <th>{{ order[4] }}</th>
+    <th>{{ order[5] }}</th>
+    <th>{{ order[6] }}</th>
+    <th>{{ order[7] }}</th>
+    <th>{{ order[8] }}</th>
+  </tr>
+  {% endfor %}
+</table>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <h1 style="color:red;" class=flashes>
+    {% for message in messages %}
+      {{ message }}</li>
+    {% endfor %}
+    </h1>
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
+<h1>Logistics</h1>
+<p>Create new batch</p>
+<form action="/create_batch" method="POST">
+  <br />
+  Order id:
+  <input type="number" name="order_id" />
+  <br />
+  Quantity:
+  <input type="number" name="qty" />
+  <br />
+  <input type="submit" value="Send" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+<a href="/logout">logout</a>

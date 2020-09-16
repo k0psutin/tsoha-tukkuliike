@@ -1,0 +1,34 @@
+<h1>Sales</h1>
+<h2>Place order:</h2>
+<form action="/place_order" method="POST">
+  Company id:
+  <input type="number" name="company_id" value="company_id" />
+  <br />
+  <table>
+    <tr>
+      <td></td>
+      <td></td>
+      <td>Price</td>
+      <td>Qty</td>
+      {% for item in items %}
+    </tr>
+
+    <tr>
+      <td>
+        <input type="checkbox" name="item_id" value="{{ item[0] }}" />
+      </td>
+      <td>{{ item[1] }}</td>
+      <td>
+        <input type="number" name="price" step="0.01" />
+      </td>
+      <td>
+        <input type="number" name="qty" value="qty" />
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+
+  <input type="submit" value="Send" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+<a href="/">back</a>

@@ -1,0 +1,68 @@
+<html>
+<body>
+<script>
+</script>
+<h1>Collector view</h1>
+<h2>Virtual view of batches</h2>
+<table>
+  <tr>
+    <th>Batch nr.</th>
+    <th>Item name</th>
+    <th>Qty</th>
+    <th>Date</th>
+  </tr>
+  {% for batch in batches %}
+  <tr>
+    <th>{{ batch[0] }}</th>
+    <th>{{ batch[1] }}</th>
+    <th>{{ batch[2] }}</th>
+    <th>{{ batch[3].strftime('%Y-%m-%d') }}</th>
+  </tr>
+  {% endfor %}
+</table>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <h1 style="color:red;" class=flashes>
+    {% for message in messages %}
+      {{ message }}</li>
+    {% endfor %}
+    </h1>
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
+<h2>Order {{ order_id }} details</h2>
+<table>
+  <tr>
+    <th>Item name</th>
+    <th>Remaining qty</th>
+    <th>Collected qty</th>
+  </tr>
+  {% for order in orderdetails %}
+  <tr>
+    <th>{{ order[1] }}</th>
+    <th>{{ order[4] }}</th>
+    <th>{{ order[3] }}</th>
+  </tr>
+  {% endfor %}
+</table>
+<h2>Collect item</h2>
+<form action="/collect_batch" method="POST">
+<br>
+Batch nr:
+<input type="text" name="batch_nr">
+<br>
+Collected:
+<input type="number" name="qty">
+<br>
+<input type="submit" value="Collect">
+<input type="hidden" name="order_id" value="{{ order_id }}">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+<form action="/create_shipment" method="POST">
+<input type="submit" value="Complete shipment">
+<input type="hidden" name="order_id" value="{{ order_id }}">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+<a href="/">Back</a>
+</body>
+</html>

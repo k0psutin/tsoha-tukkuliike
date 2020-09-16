@@ -1,0 +1,33 @@
+<h1>Supplier</h1>
+<h2>Place order:</h2>
+<form action="/place_supply_order" method="POST">
+<table>
+  {% for item in items %} 
+
+  <tr>
+     <td>
+    <input type="checkbox" name="item_id" value="{{ item[0] }}" />
+    {{ item[1] }}
+    </td>
+    <td>
+    Quantity:
+    <input type="number" name="qty" value="qty"/>
+    </td>
+    <td>
+    Price:
+    <input type="number" name="price" value="price" step="0.01">
+    </td>
+    <td>
+    Company id:
+    <input type="number" name="company_id" value="company_id">
+    </td>
+  </tr>
+  {% endfor %}
+  </table>
+  <br>
+  <input type="submit" value="Send" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="hidden" name="company_id" value="{{ company_id }}" />
+</form>
+<br>
+<a href="/">back</a>

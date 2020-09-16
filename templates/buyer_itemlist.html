@@ -1,0 +1,20 @@
+title>Items</title>
+<h1>Items controller</h1>
+<form action="/add_item" method="POST">
+Add new item:
+<br>
+Name:
+<input type="text" name="name">
+<br>
+Price:
+<input type="number" name="price" step="0.01">
+<br>
+<input type="submit" value="Send">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+</form>
+<p>Items:</p>
+<ul>
+{% for item in items %}
+<li> {{ item[1] }} - {{ item[2] }}e
+{% endfor %}
+</ul>

@@ -1,0 +1,10 @@
+<h2>All sale orders</h2>
+{% for order in orders %}
+<p>
+  <a href="/order_summary/{{ order[0] }}"
+    >Order id: {{ order[0] }} - Company: {{ order[2] }} - Route: {{ order[5] }}
+    - Qty: {{ order[4] }} - Order date: {{ order[3].strftime('%Y-%m-%d') }}</a
+  >
+</p>
+{% endfor %}
+<a href="javascript:history.back()">back</a>

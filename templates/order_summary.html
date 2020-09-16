@@ -1,0 +1,35 @@
+<h1>Order {{ order_id }} details</h1>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <h1 class=flashes>
+    {% for message in messages %}
+      {{ message }}</li>
+    {% endfor %}
+    </h1>
+  {% endif %}
+{% endwith %}
+{% block body %}{% endblock %}
+<p>Customer: {{ company[0] }}</p>
+<p>Address: {{ company[1] }}</p>
+<p>Email: {{ company[2] }}</p>
+<p>Country: {{ company[3] }}</p>
+<table>
+  <tr>
+    <td>Item name</td>
+    <td>Quantity</td>
+    <td>Price</td>
+  </tr>
+  {% for item in order %}
+  <tr>
+    <td>{{ item[1] }}</td>
+    <td>{{ item[2] }}</td>
+    <td>{{ item[5] }}</td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <td></td>
+    <td>Total:</td>
+    <td>{{ total }}</td>
+  </tr>
+</table>
+<a href="javascript:history.back()">back</a>

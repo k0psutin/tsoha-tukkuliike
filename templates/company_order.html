@@ -1,0 +1,16 @@
+<h1>Customer</h1>
+<h2>Place order:</h2>
+<form action="/place_order" method="POST">
+  {% for item in items %}
+
+  <p>
+    <input type="checkbox" name="item_id" value="{{ item[0] }}" />
+    {{ item[1] }} - {{ item[2] }}e/pc
+    <input type="number" name="qty" value="qty" />
+  </p>
+  {% endfor %}
+  <input type="submit" value="Send" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+  <input type="hidden" name="company_id" value="{{ company_id }}" />
+</form>
+<a href="logout">logout</a>
