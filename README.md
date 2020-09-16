@@ -6,9 +6,11 @@ Hallintajärjestelmällä pystytään helposti tekemään yhteenvetoja annetun a
 
 Tällä järjestelmällä on esimerkiksi mahdollista jäljittää toimintoja kuten että, kuka tilasi kuorman X, mikä tuottaja ja toimitusmaa oli tuotteella X sekä kuka on kerännyt ostajalle Y tuotetta X.
 
+Myytävät tuotteet voidaan myös asettaa suljetuiksi asiakkailta.
+
 ### Toiminnot
 
-Osto pystyy luomaan tilauksia muille tukkureille, luomaan uusia tuotteita, ja ostokuorman saapuessa tukkuliikkeeseen, logistiikka huolehtii kuormasta.
+Osto pystyy luomaan tilauksia muille tukkureille, luomaan uusia tuotteita, sekä luomaan uusia tukkuliikkeitä.
 
 Logistiikka vastaa tuotteiden inventoinnista, sekä saapuneiden kuormien kirjaamisesta tukun tietokantaan.
 
@@ -22,14 +24,63 @@ Myös asiakas voi tilata suoraan tukusta omilla tunnuksillaan.
 
 <br>
 
-### Toteutuneet toiminnot
+### Toteutuneet/suunnitellut toiminnot
 
-Ei vielä mitään.  
+Varasto:  
+[x] Pystyy siirtämään saapuvia tuotteita tukun varastoon  
+[x] Virtuaalinäkymä saapuvista tuotteista  
+[ ] Varaston inventointi  
+<br>
+Myynti:  
+[x] Pystyy luomaan ostotilauksia  
+[x] Näkee avoimet/suljetut asiakkaiden tilaukset  
+[x] Näkee varastossa olevat tuotteet
+[x] Pystyy luomaan tunnuksia asiakkaille
+
+<br>
+
+Osto:  
+[x] Pystyy luomaan uusia tuotteita  
+[x] Pystyy näkemään saapuvat tuotteet, sekä varaston tuotteet  
+[x] Pystyy tekemään tilauksia tuotteille  
+[x] Pystyy lisäämään uusia tuotteita
+[ ] Näkee yhteenvedon saapuvista sekä varaston tuotteista annetulta ajalta
+
+<br>
+
+Keräily:  
+[x] Pystyy keräämään tuotteita avoimiin tilauksiin  
+[x] Virtuaalinäkymä tukun saldoilla olevista tuotteista  
+[x] Pystyy luomaan lähetyksen kerätystä tilauksesta
+
+<br>
+
+Kontrolleri:  
+[ ] Pääsee joka osa-alueelle  
+[ ] Voi luoda käyttäjiä  
+[ ] Näkee yhteenvetoja myynneistä, ostoista jne.
+
+<br>
+
+Asiakas:  
+[x] Voi luoda ostotilauksen  
+[x] Saa myyntivahvistuksen tilauksen jättämisen jälkeen.
+
 <br>
 
 ### Dokumentaation vaiheet
 
-Tietokantaosio aloitettu, muut tekemättä.
+[x] Tietokanta osio  
+[x] Käyttöohjeet  
+[ ] Asennusohje  
+[ ] Käyttötapaukset  
+[ ] Englanninkielinen versio
+
+### Sovelluksen vaiheet
+
+[x] Raakarunko valmiiksi  
+[ ] Syötteiden validointi  
+[ ] Ulkoasu kuntoon
 
 ### Jatkokehitysideoita
 
@@ -53,11 +104,24 @@ Asiakas: `asiakas/1234`
 
 <br>
 
+### Käyttäjätasot
+
+| Taso | Rooli            |
+| :--: | ---------------- |
+|  1   | asiakas          |
+|  2   | varasto          |
+|  3   | keräily          |
+|  4   | myynti           |
+|  5   | osto             |
+|  6   | kontroller/admin |
+
+<br>
+
 ### Dokumentaatio
 
 <br>
 
 [Tietokanta](/doc/db.md)  
-Käyttöohjeet  
+[Käyttöohjeet](/doc/kayttoohje.md)  
 Asennusohje  
 Käyttötapaukset
