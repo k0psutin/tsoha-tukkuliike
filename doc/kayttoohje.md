@@ -140,11 +140,68 @@ Added new item Tiili
 
 ## Myynti
 
-Ei vielä toteutettu.
+`List batches` - näyttää tukun varastossa olevat tuotteet.  
+`List sale orders` - näyttää kaikki asiakkaiden tilaukset.  
+`Create company user` - luo uusi käyttötili asiakkaalle.  
+`Place company order` - luo uusi tilaus asiakkaalle.
+
+### Create company user
+
+Tässä näkymässä voidaan tehdä uusi käyttötili asiakkaalle, jolla asiakas voi itse tilata tukulta löytyviä tuotteita.
+
+Esimerkki:
+
+```
+Username: nakkila
+Password: ******
+Re-type password: ******
+Company id: 13
+Send
+```
+
+Lähettämisen jälkeen järjestelmä ilmoittaa käyttäjän onnistuneesta luonnista. Tai virheilmoituksella, jos nimi on jo käytösssä, salasanat eivät täsmää tai kyseisellä tunnisteella ei löydy yritystä.
+
+### Place company order
+
+Näkymässä voidaan kirjata hypoteettinen sähköpostitse tai puhelimitse saapunut asiakkaan tilaus.
+
+Esimerkki:
+
+```
+Place order:
+Company id: 13
+   Item name      Price       Qty
+      ------- muita tuotteita --------
+[x] Tiili         [0.53]      [100]
+[x] Laasti        [1.02]      [ 20]
+      ------- muita tuotteita --------
+Send
+```
+
+Onnistuneen tilauksen jälkeen näkyy tilauksen yhteenveto:
+
+```
+Order id: 0923484
+
+Customer: Pamlab, L.L.C.
+
+Address: 57 Muir Pass
+
+Email: mtuffieldg@toplist.cz
+
+Country: PLe
+
+Item name	Quantity	Price
+Tiili	    100 	      53
+Total:	              53
+back
+```
+
+Tilaus on tehty onnistuneesti, ja kirjattu järjestelmään.
 
 ## Kontrolleri
 
-Ei vielä toteutettu.
+Kontrollerilla on kaikki samat toiminnot, kuin varastolla, keräilyllä, myynnillä ja ostolla.
 
 ## Asiakas
 
@@ -177,4 +234,4 @@ Total:	199.2
 back
 ```
 
-Tilaus onnistui siis.
+Tilaus on tehty onnistuneesti, ja kirjattu järjestelmään.
