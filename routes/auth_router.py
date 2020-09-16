@@ -10,7 +10,7 @@ import db_interfaces.orders as orders
 @app.route("/")
 def index():
     if session.get("username") == None:
-        return render_template("login.html")
+        return render_template("user/login.html")
     else:
         return user_redirect()
 
