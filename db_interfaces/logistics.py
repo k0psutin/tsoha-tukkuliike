@@ -15,19 +15,47 @@ def get_all_batches():
     return result.fetchall()
 
 
+def get_batch_by_batchnr(batchnr):
+    sql = """SELECT * FROM batches WHERE batch_nr = :batchnr"""
+    result = db.session.execute(sql, {"batchnr": batchnr})
+    return result.fetchone()
+
+
 def check_if_batch_exists(batch_nr):
     sql = "SELECT batch_nr FROM batches WHERE batch_nr = :batch_nr"
     result = db.session.execute(sql, {"batch_nr": batch_nr})
     return result.fetchone() != None
 
 
-def update_order_qty(order_id, updated_qty):
-    sql3 = "UPDATE orders SET qty = :updated_qty WHERE order_id = :order_id"
+def update_supply_order_qty(order_id, new_qty):
+    order = get_supply_order_by_id(order_id)
+
+    if order == None:
+        flash("Invalid order id")
+        return
+
+    sql = "UPDATE orders SET qty = :updated_qty WHERE order_id = :order_id"
     db.session.execute(
-        sql3, {"updated_qty": updated_qty, "order_id": order_id})
+        sql, {"updated_qty": new_qty, "order_id": order_id})
 
     db.session.commit()
-    return 0
+    flash("Supply order %s quantity updated." % order_id)
+    return
+
+
+def update_batch_qty(batchnr, new_qty):
+
+    if check_if_batch_exists(batchnr) == False:
+        flash("Invalid batch number")
+        return
+
+    sql = "UPDATE batches SET qty = :updated_qty WHERE batch_nr = :batchnr"
+    db.session.execute(
+        sql, {"updated_qty": new_qty, "batchnr": batchnr})
+
+    db.session.commit()
+    flash("Batch %s quantity updated." % batchnr)
+    return
 
 
 def get_supply_order_by_id(order_id):
@@ -72,7 +100,7 @@ def create_new_batch(order_id, qty):
             updated_qty = 0
 
         add_batch_qty(batch_nr, qty)
-        update_order_qty(order_id, updated_qty)
+        update_supply_order_qty(order_id, updated_qty)
         flash("Batch %s updated succesfully." % batch_nr)
         return 0
 
