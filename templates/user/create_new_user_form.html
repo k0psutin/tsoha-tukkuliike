@@ -1,15 +1,7 @@
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <h1 class=flashes>
-    {% for message in messages %}
-      {{ message }}</li>
-    {% endfor %}
-    </h1>
-  {% endif %}
-{% endwith %}
-{% block body %}{% endblock %}
-<h1>Create user</h1>
-<br />
+{% extends "layout.html" %} 
+{% block title %}Controller{% endblock %} 
+{% block header %}Create new user{% endblock %}
+{% block upper_content %} 
 <form action="/create_new_user" method="POST">
   Username:
   <input type="text" value="" name="username"/>
@@ -22,10 +14,11 @@
   <br>
   Authorization level:
   <input type="number" value="0" name="auth_lvl" />
+  <br>
    1 = company, 2 = logistics, 3 = collector, 4 = sales, 5 = supply buyer, 6 = admin
+   <br>
    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
    <br>
   <input type="submit" value="Send" />
 </form>
-<br>
-<a href="/">Back</a>
+{% endblock %}

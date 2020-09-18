@@ -1,35 +1,10 @@
-<html>
-<body>
-<script>
-</script>
-<h1>Collector view</h1>
-<h2>Virtual view of batches</h2>
-<table>
-  <tr>
-    <th>Batch nr.</th>
-    <th>Item name</th>
-    <th>Qty</th>
-    <th>Date</th>
-  </tr>
-  {% for batch in batches %}
-  <tr>
-    <th>{{ batch[0] }}</th>
-    <th>{{ batch[1] }}</th>
-    <th>{{ batch[2] }}</th>
-    <th>{{ batch[3].strftime('%Y-%m-%d') }}</th>
-  </tr>
-  {% endfor %}
-</table>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <h1 style="color:red;" class=flashes>
-    {% for message in messages %}
-      {{ message }}</li>
-    {% endfor %}
-    </h1>
-  {% endif %}
-{% endwith %}
-{% block body %}{% endblock %}
+{% extends "layout.html" %} 
+{% block title %}Collector view{% endblock %} 
+{% block upper_content %} 
+<h1>Virtual view of inventory</h1>
+{% include "/logistic/list_inventory.html" %} 
+{% endblock %} 
+{% block lower_content %}
 <h2>Order {{ order_id }} details</h2>
 <table>
   <tr>
@@ -63,6 +38,4 @@ Collected:
 <input type="hidden" name="order_id" value="{{ order_id }}">
 <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
-<a href="/">Back</a>
-</body>
-</html>
+ {% endblock %}

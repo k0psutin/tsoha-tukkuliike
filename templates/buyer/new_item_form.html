@@ -1,15 +1,7 @@
-<title>Items</title>
-<h1>Add new item</h1>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <h1 style="color:red;" class=flashes>
-    {% for message in messages %}
-      {{ message }}</li>
-    {% endfor %}
-    </h1>
-  {% endif %}
-{% endwith %}
-{% block body %}{% endblock %}
+{% extends "layout.html" %} 
+{% block title %}Buyer{% endblock %} 
+{% block header %}Add new item{% endblock %}
+{% block upper_content %} 
 <form action="/add_new_item" method="POST">
   Add new item:
   <br />
@@ -22,4 +14,4 @@
   <input type="submit" value="Send" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
-<a href="/">back</a>
+{% endblock %}

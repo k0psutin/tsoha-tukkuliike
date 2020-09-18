@@ -1,38 +1,9 @@
-<h1>Collector view</h1>
-<h2>Virtual view of batches</h2>
-<table>
-  <tr>
-    <th>Batch nr.</th>
-    <th>Item name</th>
-    <th>Qty</th>
-    <th>Date</th>
-  </tr>
-  {% for batch in batches %}
-  <tr>
-    <th>{{ batch[0] }}</th>
-    <th>{{ batch[1] }}</th>
-    <th>{{ batch[2] }}</th>
-    <th>{{ batch[3].strftime('%Y-%m-%d') }}</th>
-  </tr>
-  {% endfor %}
-</table>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <h1 class=flashes>
-    {% for message in messages %}
-      {{ message }}</li>
-    {% endfor %}
-    </h1>
-  {% endif %}
-{% endwith %}
-{% block body %}{% endblock %}
+{% extends "layout.html" %} 
+{% block title %}Collector view{% endblock %} 
+{% block upper_content %} 
 <h2>Open orders</h2>
-{% for order in orders %}
-<p>
-  <a href="/collect_order/{{ order[0] }}"
-    >Order id: {{ order[0] }} - Company: {{ order[2] }} - Route: {{ order[5] }}
-    - Qty: {{ order[4] }} - Order date: {{ order[3].strftime('%Y-%m-%d') }}</a
-  >
-</p>
-{% endfor %}
-<a href="/logout">logout</a>
+{% include "/collector/list_all_orders.html" %}
+{% endblock %}
+{% block back %}
+{% endblock %}
+

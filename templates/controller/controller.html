@@ -1,5 +1,7 @@
-<h1>Controller</h1>
-
+{% extends "layout.html" %} 
+{% block title %}Controller{% endblock %} 
+{% block header %}Controller view{% endblock %}
+{% block upper_content %}
 <a href="/logistics">Logistics view</a>
 <br />
 <a href="/collector">Collector view</a>
@@ -10,4 +12,5 @@
 <br />
 <a href="/create_new_user_form">Create new user</a>
 <br />
-<a href="/logout">Logout</a>
+{% endblock %}
+{% block back %}{% endblock %}

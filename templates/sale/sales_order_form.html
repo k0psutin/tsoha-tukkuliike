@@ -1,5 +1,7 @@
-<h1>Sales</h1>
-<h2>Place order:</h2>
+{% extends "layout.html" %} 
+{% block title %}Sales{% endblock %} 
+{% block header %}Place company order{% endblock %}
+{% block upper_content %} 
 <form action="/place_order" method="POST">
   Company id:
   <input type="number" name="company_id" value="company_id" />
@@ -31,4 +33,4 @@
   <input type="submit" value="Send" />
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
-<a href="/">back</a>
+{% endblock %}

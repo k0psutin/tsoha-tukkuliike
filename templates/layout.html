@@ -1,0 +1,24 @@
+<!doctype html>
+<title> {% block title %}{% endblock %} </title>
+{% block logout %}
+<br>
+<a href="/logout">logout</a>
+<br>
+{% endblock %}
+<h1>{% block header %}{% endblock %}</h1>
+{% block upper_content %}{% endblock %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <h1 class=flashes>
+    {% for message in messages %}
+      {{ message }}</li>
+    {% endfor %}
+    </h1>
+  {% endif %}
+{% endwith %}
+{% block lower_content %}{% endblock %}
+<br>
+{% block back %}
+<a href="javascript:history.back()">back</a>
+{% endblock %}
+

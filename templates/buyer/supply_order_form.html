@@ -1,5 +1,7 @@
-<h1>Supplier</h1>
-<h2>Place order:</h2>
+{% extends "layout.html" %} 
+{% block title %}Buyer{% endblock %} 
+{% block header %}Place new supply order{% endblock %}
+{% block upper_content %} 
 <form action="/place_supply_order" method="POST">
 <table>
   {% for item in items %} 
@@ -29,5 +31,4 @@
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
   <input type="hidden" name="company_id" value="{{ company_id }}" />
 </form>
-<br>
-<a href="/">back</a>
+{% endblock %}

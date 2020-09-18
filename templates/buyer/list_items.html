@@ -1,8 +1,10 @@
-<title>Items</title>
+{% extends "layout.html" %} 
+{% block title %}Items{% endblock %} 
+{% block upper_content %} 
 <h1>Items list</h1>
 <p>Items:</p>
 <ul>
   {% for item in items %}
   <li>{{ item[1] }} - {{ item[2] }}e {% endfor %}</li>
 </ul>
-<a href="/">back</a>
+{% endblock %} 

@@ -11,6 +11,17 @@
 {% include "/logistic/list_supply_orders.html" %} 
 {% endblock %} 
 {% block lower_content %} 
-{% include "/logistic/create_new_batch.html" %} 
+<h2>Update order quantity</h2>
+<form action="/update_supply_order" method="POST">
+  <br />
+  Order id:
+  <input type="number" name="order_id" />
+  <br />
+  Quantity:
+  <input type="number" name="qty" />
+  <br />
+  <input type="submit" value="Send" />
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
 {% endblock %}
 {% block back %}{% endblock %}

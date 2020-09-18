@@ -1,7 +1,10 @@
-<h1>Sales</h1>
-<p><a href="/list_batches">List batches</a></p>
+{% extends "layout.html" %} 
+{% block title %}Sales{% endblock %} 
+{% block header %}Sales view{% endblock %}
+{% block upper_content %}
+<p><a href="/inventory_view">List batches</a></p>
 <p><a href="/list_sale_orders">List sale orders</a></p>
 <p><a href="/create_company_user">Create company user</a></p>
 <p><a href="/place_company_order">Place company order</a></p>
-<br />
-<a href="/logout">logout</a>
+{% endblock %}
+{% block back %}{% endblock %}

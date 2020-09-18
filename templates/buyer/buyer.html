@@ -1,7 +1,12 @@
-<h1>Order view</h1>
-<p><a href="/list_batches">List batches</a></p>
+{% extends "layout.html" %} 
+{% block title %}Buyer{% endblock %} 
+{% block header %}Buyer view{% endblock %}
+{% block upper_content %} 
+<p><a href="/inventory_view">List inventory</a></p>
 <p><a href="/list_supply_orders">List supply orders</a></p>
 <p><a href="/supply_order_form">Supply order form</a></p>
 <p><a href="/list_items">List all items</a></p>
 <p><a href="/new_item_form">Add new item</a></p>
-<p><a href="/logout">logout</a></p>
+{% endblock %}
+{% block back %}
+{% endblock %}

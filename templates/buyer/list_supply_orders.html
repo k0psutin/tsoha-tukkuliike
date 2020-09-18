@@ -1,28 +1,7 @@
-<h1>Supply orders</h1>
-<table>
-  <tr>
-    <th>Order id</th>
-    <th>Supplier id</th>
-    <th>Supplier name</th>
-    <th>Countrycode</th>
-    <th>Order date</th>
-    <th>Item id</th>
-    <th>Item name</th>
-    <th>Item qty</th>
-  </tr>
-  {% for order in orders %}
-  <tr>
-    <th>{{ order[0] }}</th>
-    <th>{{ order[1] }}</th>
-    <th>{{ order[2] }}</th>
-    <th>{{ order[3] }}</th>
-    <th>{{ order[4] }}</th>
-    <th>{{ order[5] }}</th>
-    <th>{{ order[6] }}</th>
-    <th>{{ order[7] }}</th>
-    <th>{{ order[8] }}</th>
-  </tr>
-  {% endfor %}
-</table>
-<br>
-<a href="/">back</a>
+{% extends "layout.html" %} 
+{% block title %}Buyer{% endblock %} 
+{% block upper_content %} 
+{% include "/logistic/list_supply_orders.html" %} 
+{% endblock %} 
+{% block lower_content %} 
+{% endblock %}

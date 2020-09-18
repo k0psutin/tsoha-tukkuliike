@@ -1,0 +1,63 @@
+{% extends "layout.html" %} 
+{% block title %}Sale{% endblock %} 
+{% block upper_content %}
+<h1>Order {{ order_id }} details
+<form action="/delete_order" method="POST">
+<input type="submit" value="Delete order">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+<input type="hidden" name="order_id" value="{{ order_id }}" />
+</form>
+</h1>
+<p>Customer: {{ company[0] }}</p>
+<p>Address: {{ company[1] }}</p>
+<p>Email: {{ company[2] }}</p>
+<p>Country: {{ company[3] }}</p>
+<form action="/update_sale_order" method="POST">
+<table>
+  <tr>
+    <td>Item name</td>
+    <td>Quantity</td>
+    <td>Price</td>
+    <td>New qty</td>
+  </tr>
+  {% for item in order %}
+  <tr>
+    <td>{{ item[1] }}</td>
+    <td>{{ item[2] }}</td>
+    <td>{{ item[5] }}</td>
+    <td>
+    <input type="number" name="qty" value="">
+    <input type="hidden" name="item_id" value="{{ item[0] }}" />
+    </td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <td></td>
+    <td>Total:</td>
+    <td>{{ total }}</td>
+  </tr>
+</table>
+<input type="hidden" name="order_id" value="{{ order_id }}"/>
+<input type="hidden" name="company_id" value="{{ company[4] }}" />
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+<br>
+<input type="submit" value="Update order"/>
+</form>
+<h2>Add new item to order</h2>
+<form action="/add_item_to_order" method="POST">
+  <br />
+  Item id:
+  <input type="text" name="item_id" value=""/>
+  <br />
+  Quantity:
+  <input type="number" name="qty" value =""/>
+  <br />
+  <br>
+  <input type="submit" value="Add item" />
+  <input type="hidden" name="company_id" value="{{ company[4] }}" />
+  <input type="hidden" name="order_id" value="{{ order_id }}"/>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+{% endblock %}
+{% block lower_content %}
+{% endblock %}
