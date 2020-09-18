@@ -71,8 +71,7 @@ Asiakas:
 <br>
 
 Sovellus:  
-[x] Mahdollisuus luoda käyttäjä komentokehotteelta. 
-
+[x] Mahdollisuus luoda käyttäjä komentokehotteelta.
 
 ### Dokumentaation vaiheet
 
@@ -90,7 +89,7 @@ Sovellus:
 
 ### Suunniteltuja toimintoja
 
-[ ] Transaktioloki varastosiirroille
+[ ] Transaktioloki varastosiirroille  
 [ ] Roolien eriytys omaksi taulukseen
 
 <br>
