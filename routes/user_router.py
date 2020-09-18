@@ -2,6 +2,7 @@ from app import app
 from flask import session, abort, request, flash, redirect, render_template
 
 import db_interfaces.users as users
+import security
 
 
 @app.route("/logout")
@@ -29,11 +30,8 @@ def create_user_form():
 
 @app.route("/create_new_user", methods=["POST"])
 def create_new_user():
-    if session["auth_lvl"] != 6:
-        abort(403)
-
-    if session["csrf_token"] != request.form["csrf_token"]:
-        abort(403)
+    security.has_role([6])
+    security.has_csrf_token(request.form["csrf_token"])
 
     username = request.form["username"]
     password = request.form["password"]
