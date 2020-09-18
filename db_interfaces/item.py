@@ -21,6 +21,12 @@ def add_item(itemname, price):
     flash("Added new item %s" % itemname)
 
 
+def get_item_by_id(item_id):
+    sql = "SELECT * FROM items WHERE item_id = :item_id"
+    result = db.session.execute(sql, {"item_id": item_id})
+    return result.fetchone()
+
+
 def get_item_by_name(itemname):
     sql = "SELECT item_id FROM items WHERE LOWER(itemname)=:itemname"
     result = db.session.execute(sql, {"itemname": itemname.lower()})
