@@ -2,6 +2,38 @@ from flask import session, flash
 from os import urandom
 from werkzeug.security import check_password_hash, generate_password_hash
 from db_interfaces.db import db
+from getpass import getpass
+from app import app
+
+
+@app.cli.command("init")
+def create_user():
+    print("<-- Create new user for fresh database -->")
+    print("<--         Press CTRL+C to abort      -->")
+    username = input("Enter username: ")
+    password = getpass("Enter password: ")
+    password2 = getpass("Retype password: ")
+
+    if username == '' or password == '' or password2 == '':
+        print("Username and/or password is empty. Exiting.")
+        quit()
+
+    if len(username) < 4:
+        print("Username must be at least 4 charachters long. Exiting.")
+        quit()
+
+    if len(password) < 4:
+        print("Password must be at least 4 charachters long. Exiting.")
+        quit()
+
+    if password != password2:
+        print("Passwords doesn't match. Exiting.")
+        quit()
+
+    create_user(username, password, 6)
+    print("User %s created succesfully." % username)
+    print("Type 'flask run' to start the application. Exiting.")
+    quit()
 
 
 def get_user_by_name(username):  # TODO lowercase checks etc...
