@@ -29,13 +29,14 @@ Myös asiakas voi tilata suoraan tukusta omilla tunnuksillaan.
 Varasto:  
 [x] Pystyy siirtämään saapuvia tuotteita tukun varastoon  
 [x] Virtuaalinäkymä saapuvista tuotteista  
-[ ] Varaston inventointi  
+[x] Varaston inventointi  
 <br>
 Myynti:  
 [x] Pystyy luomaan ostotilauksia  
 [x] Näkee avoimet/suljetut asiakkaiden tilaukset  
 [x] Näkee varastossa olevat tuotteet
 [x] Pystyy luomaan tunnuksia asiakkaille
+[x] Voi muokata myyntitilauksia
 
 <br>
 
@@ -58,7 +59,7 @@ Keräily:
 Kontrolleri:  
 [x] Pääsee joka osa-alueelle  
 [x] Voi luoda käyttäjiä
-[ ] Voi muokata myyntitilauksia, varastosaldoja, tuotetilauksia  
+[x] Voi muokata myyntitilauksia, varastosaldoja, tuotetilauksia  
 [ ] Näkee yhteenvetoja myynneistä, ostoista jne.
 
 <br>
@@ -68,6 +69,10 @@ Asiakas:
 [x] Saa myyntivahvistuksen tilauksen jättämisen jälkeen.
 
 <br>
+
+Sovellus:  
+[x] Mahdollisuus luoda käyttäjä komentokehotteelta. 
+
 
 ### Dokumentaation vaiheet
 
@@ -79,18 +84,20 @@ Asiakas:
 
 ### Sovelluksen vaiheet
 
-[x] Raakarunko valmiiksi  
+[x] Runko valmiiksi  
 [ ] Syötteiden validointi  
 [ ] Ulkoasu kuntoon
 
-### Jatkokehitysideoita
+### Suunniteltuja toimintoja
 
-Ei vielä mitään.
+[ ] Transaktioloki varastosiirroille
+[ ] Roolien eriytys omaksi taulukseen
+
 <br>
 
 ### Sovelluksen osoite:
 
-[Heroku - sheltered-teple-19572](https://sheltered-temple-19572.herokuapp.com/)
+[Heroku - sheltered-temple-19572](https://sheltered-temple-19572.herokuapp.com/)
 <br>
 
 ### Käyttäjätunnukset:
