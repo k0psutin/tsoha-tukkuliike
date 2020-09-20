@@ -1,6 +1,31 @@
 # Käyttöohjeet
 
-Jokaiselta sivulta löytyy joko `back` tai `logout` -painikkeet, joilla päästään takaisinpäin, tai kirjautumaan ulos.
+### Heroku
+
+Sovellus löytyy herokusta osoitteesta:
+
+[https://sheltered-temple-19572.herokuapp.com/](https://sheltered-temple-19572.herokuapp.com/)
+
+Sovelluksen aukeamisessa voi kestää hetken, jos sovelluksessa ei ole lähiaikoina käyty.
+
+### Käyttäjätunnukset:
+
+<br>
+    
+Logistiikka: `varasto/1234`  
+Keräily: `keraily/1234`  
+Osto: `osto/1234`  
+Myynti: `myynti/1234`  
+Kontrolleri: `admin/1234`  
+Asiakas: `asiakas/1234`
+
+<br>
+
+Jokaisella tunnuksella on oma näkymä sekä omat toiminnot. Näkymissä on myös painikkeet `back` ja `logout`, millä voidaan palata edelliselle sivulle tai kirjautua ulos.
+
+Mikäli ei jaksa kirjautua tunnuksilla edestakaisin, voi kirjautua sisään kontrollerin tunnuksilla. Kontrollerilla on pääsy joka näkymään.
+
+Alapuolelta löytyvät ohjeet näkymien toimintoihin.
 
 ## Varasto
 
