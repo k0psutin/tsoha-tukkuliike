@@ -85,6 +85,7 @@ Sovellus:
 
 [x] Runko valmiiksi  
 [ ] Syötteiden validointi  
+[ ] Varmistusikkuna mm. tilaamiseen.  
 [ ] Ulkoasu kuntoon
 
 ### Suunniteltuja toimintoja
@@ -96,7 +97,7 @@ Sovellus:
 
 ### Sovelluksen osoite:
 
-[Heroku - sheltered-temple-19572](https://sheltered-temple-19572.herokuapp.com/)
+[https://sheltered-temple-19572.herokuapp.com/](https://sheltered-temple-19572.herokuapp.com/)
 <br>
 
 ### Käyttäjätunnukset:
