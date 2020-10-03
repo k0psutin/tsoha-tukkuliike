@@ -1,0 +1,21 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='js/pageController.js')}}"></script>
+{% if page_count|int != 0 %}
+{% if list_type is defined %}
+{% else %}
+{% set list_type = 0 %}
+{% endif %}
+<nav aria-label="Page navigation example">
+  <ul class="pagination justify-content-center">
+    <li class="page-item {% if current_page|int == 0 %} text-muted disabled{% else %}{% endif %}">
+      <a {% if current_page|int == 0 %}style="color: lightgray;"{% endif %} class="page-link" onclick="prevPage('{{ type }}','{{ page_count_name }}')">Previous</a>
+    </li>
+    {% for i in range(1, page_count|int + 1) %}
+    <li class="page-item {% if i == current_page|int + 1 %} active text-muted {% endif %} "><a {% if i == current_page|int + 1 %}style="background-color: black;"{% endif %} class="page-link" onclick="changePage('{{ i }}','{{ type }}','{{ page_count_name }}')" {% if current_page|int == page_count %}tabindex="-1"{% else %}{% endif %}>{{ i }}</a></li>
+    {% endfor %}
+    <li class="page-item {% if current_page|int == page_count|int - 1 %} text-muted disabled{% else %}{% endif %}">
+       <a {% if current_page|int == page_count - 1 %} style="color: lightgray;"{% endif %} class="page-link" onclick="nextPage('{{ type }}','{{ page_count_name }}')">Next</a>
+    </li>
+  </ul>
+</nav>
+{% endif %}
