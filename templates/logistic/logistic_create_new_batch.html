@@ -5,7 +5,7 @@
   <label for="orderId">Order ID</label>
   <div class="input-group mb-3">
     <select class="custom-select" id="order_id" name="order_id" required="true">
-    <option value="">Select order id
+    <option value="">Select order id</option>
         {% for order in orders %}
     <option value="{{ order[0] }}">{{ order[0] }}</option>
         {% endfor %}

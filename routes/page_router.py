@@ -32,11 +32,7 @@ def prev_page():
 def change_page():
     page = request.form["page"]
     page_number = request.form["page_number"]
-    page_count_type = request.form["page_count_type"]
     page_number = int(page_number) - 1
-
-    if page_number < 0 or page_number > session[page_count_type]:
-        return "OK"
 
     session[page] = page_number
     return "OK"

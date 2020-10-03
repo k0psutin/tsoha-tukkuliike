@@ -2,6 +2,7 @@ from flask.helpers import flash
 from flask import session
 from datetime import date
 from db_interfaces.db import db
+from db_interfaces.item import get_itemid_by_batchnr
 
 import db_interfaces.users as users
 import db_interfaces.item as item
@@ -168,28 +169,46 @@ def add_batch_qty(batch_nr, qty):
     return True
 
 
-def add_batchorder_qty(batchorder_id, qty):
+def add_batchorder_qty(order_id, item_id, qty):
     qty = int(qty)
-    sql = "SELECT qty FROM batchorders WHERE batchorder_id = :batchorder_id"
-    result = db.session.execute(sql, {"batchorder_id": batchorder_id})
-    validate_qty = result.fetchone()[0]
-    result_qty = validate_qty + qty
+    sql = "SELECT batchorders.batchorder_id, qty FROM batchorders WHERE order_id = :order_id AND item_id = :item_id"
+    result = db.session.execute(
+        sql, {"order_id": order_id, "item_id": item_id})
+    batchorder = result.fetchone()
+    result_qty = batchorder[1] + qty
 
     if result_qty < 0:
         flash("Negative quantity is not allowed", "danger")
         return False
 
     sql = "UPDATE batchorders SET qty = (batchorders.qty + :qty) WHERE batchorder_id = :batchorder_id"
-    db.session.execute(sql, {"qty": qty, "batchorder_id": batchorder_id})
+    db.session.execute(sql, {"qty": qty, "batchorder_id": batchorder[0]})
     db.session.commit()
     return True
+
+
+def create_new_batchorder(item_id, batch_nr, order_id, qty):
+    sql = "INSERT INTO batchorders (order_id, item_id, batch_nr, qty) VALUES (:order_id, :item_id, :batch_nr, :qty)"
+    db.session.execute(
+        sql, {"order_id": order_id, "qty": qty, "batch_nr": batch_nr, "item_id": item_id})
+    db.session.commit()
+    new_qty = qty * -1
+    add_batch_qty(batch_nr, new_qty)
+
+
+def get_item_qty_from_order(item_id, order_id, batch_nr):
+    item_id = item.get_itemid_by_batchnr(batch_nr)
+    sql = "SELECT orders.qty FROM orders WHERE order_id = :order_id AND item_id = :item_id"
+    result = db.session.execute(
+        sql, {"item_id": item_id, "order_id": order_id})
+    return result.fetchone()[0]
 
 
 def collect_to_batchorder(order_id, qty, batch_nr):
     qty = int(qty)
 
     if qty <= 0 or qty == '':
-        flash("Quantity must be more than zero", "danger")
+        flash("Quantity must be larger than zero", "danger")
         return False
 
     sql = """SELECT batches.item_id,
@@ -206,46 +225,43 @@ def collect_to_batchorder(order_id, qty, batch_nr):
         flash("This item doesn't belong to this order", "danger")
         return False
 
-    sql = """SELECT batchorders.batchorder_id,
-                    items.itemname,
-                    (orders.qty - batchorders.qty),
-                    batchorders.qty
-             FROM batchorders
-             INNER JOIN batches ON (batchorders.batch_nr = batches.batch_nr)
-             INNER JOIN items ON (batches.item_id = items.item_id)
-             INNER JOIN orders ON (orders.item_id = items.item_id)
-             WHERE batchorders.order_id = :order_id
-                AND orders.supply = FALSE
-                AND batchorders.batch_nr = :batch_nr"""
+    item_id = get_itemid_by_batchnr(batch_nr)
+
+    sql = """SELECT orders.qty,
+             batchorders.qty,
+             (orders.qty - batchorders.qty) 
+             FROM batchorders 
+             JOIN orders ON (orders.order_id = batchorders.order_id) 
+             WHERE batchorders.order_id = :order_id 
+             AND batchorders.batch_nr = :batch_nr 
+             AND orders.item_id = :item_id;"""
 
     result = db.session.execute(
-        sql, {"order_id": order_id, "batch_nr": batch_nr})
-    batchorder = result.fetchone()
+        sql, {"order_id": order_id, "batch_nr": batch_nr, "item_id": item_id})
+    amount = result.fetchone()
 
-    if batchorder == None:
-        sql = "SELECT orders.qty FROM orders WHERE order_id = :order_id"
-        result = db.session.execute(sql, {"order_id": order_id})
-        valid_qty = result.fetchone()[0]
-
-        if qty > valid_qty:
-            flash("Collected quantity exceeds remaining quantity", "danger")
+    if amount == None:
+        verify_qty = get_item_qty_from_order(item_id, order_id, batch_nr)
+        if qty > int(verify_qty):
+            flash("Collected qty exceed order qty", "danger")
             return False
 
-        item_id = item.get_itemid_by_batchnr(batch_nr)
-        sql = "INSERT INTO batchorders (order_id, item_id, batch_nr, qty) VALUES (:order_id, :item_id, :batch_nr, :qty)"
-        db.session.execute(
-            sql, {"order_id": order_id, "qty": qty, "batch_nr": batch_nr, "item_id": item_id})
-        db.session.commit()
-        new_qty = qty * -1
-        add_batch_qty(batch_nr, new_qty)
+        create_new_batchorder(item_id, batch_nr, order_id, qty)
         return True
+
     else:
-        valid_qty = batchorder[2]
-        if qty > valid_qty:
-            flash("Collected quantity exceeds remaining quantity", "danger")
+        print("Remaining qty: ", amount[2])
+        print("Batchorder qty: ", amount[1])
+        print("Collected qty: ", qty)
+        if qty > int(amount[2]):
+            flash("Collected qty exceed order qty", "danger")
             return False
 
-        add_batchorder_qty(batchorder[0], qty)
+        if int(amount[2]) - qty < 0:
+            flash("Collected qty exceed order qty", "danger")
+            return False
+
+        add_batchorder_qty(order_id, item_id, qty)
         new_qty = qty * -1
         add_batch_qty(batch_nr, new_qty)
         return True

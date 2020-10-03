@@ -12,6 +12,9 @@ def supply_order_page_count():
     else:
         page_count = math.ceil(page_count[0]/10)
 
+    if session["supply"] > page_count-1:
+        session["supply"] = 0
+
     session["order_page_count"] = page_count
 
 
@@ -21,6 +24,10 @@ def batch_page_count():
         page_count = 0
     else:
         page_count = math.ceil(page_count[0]/10)
+
+    if session["batch"] > page_count-1:
+        session["batch"] = 0
+
     session["batch_page_count"] = page_count
 
 
@@ -30,6 +37,10 @@ def sales_page_count():
         page_count = 0
     else:
         page_count = math.ceil(len(page_count)/10)
+
+    if session["sale"] > page_count-1:
+        session["sale"] = 0
+
     session["sale_page_count"] = page_count
 
 
@@ -39,7 +50,11 @@ def open_order_page_count():
         page_count = 0
     else:
         page_count = math.ceil(len(page_count)/10)
-    session["order_page_count"] = page_count
+
+    if session["sale"] > page_count-1:
+        session["sale"] = 0
+
+    session["sale_page_count"] = page_count
 
 
 def item_page_count():
@@ -48,4 +63,8 @@ def item_page_count():
         page_count = 0
     else:
         page_count = math.ceil(page_count)
+
+    if session["item"] > page_count-1:
+        session["item"] = 0
+
     session["item_page_count"] = page_count

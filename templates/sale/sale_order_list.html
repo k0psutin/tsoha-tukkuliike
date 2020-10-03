@@ -4,19 +4,21 @@
 <div style="container-sm">
 <table class="table table-hover table-sm">
   <thead class="thead-dark">
-     <th scope="col">Order ID</th>
-     <th scope="col">Company name</th>
-     <th scope="col">Route</th>
-     <th scope="col">Total quantity</th>
-     <th scope="col">Order date</th>
+  <tr class="d-flex">
+     <th class="col-2">Order ID</th>
+     <th class="col-3">Company name</th>
+     <th class="col-2">Route</th>
+     <th class="col-2">Total quantity</th>
+     <th class="col-3">Order date</th>
+    </tr>
   </thead>
 {% for order in orders %}
-<tr onclick="window.location='/modify_order/{{ order[0] }}';">
-  <td>{{ order[0] }}</td>
-  <td>{{ order[2] }}</td>
-  <td>{{ order[5] }}</td>
-  <td>{{ order[4] }}</td>
-  <td>{{ order[3].strftime('%Y-%m-%d') }}</td>
+<tr class="d-flex" onclick="window.location='/modify_order/{{ order[0] }}';">
+  <td class="col-2">{{ order[0] }}</td>
+  <td class="col-3">{{ order[2] }}</td>
+  <td class="col-2">{{ order[5] }}</td>
+  <td class="col-2">{{ order[4] }}</td>
+  <td class="col-3">{{ order[3].strftime('%Y-%m-%d') }}</td>
 </tr>
 {% endfor %}
 </table>

@@ -68,6 +68,5 @@ def create_new_user():
         flash("Passwords doesn't match.", "danger")
         return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
     else:
-        flash("User %s created succesfully." % username, "success")
         users.create_user(username, password, auth_lvl)
     return redirect("/controller_create_new_user")
