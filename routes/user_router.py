@@ -70,4 +70,4 @@ def create_new_user():
     else:
         flash("User %s created succesfully." % username, "success")
         users.create_user(username, password, auth_lvl)
-    return redirect("/create_new_user_form")
+    return redirect("/controller_create_new_user")
