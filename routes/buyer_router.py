@@ -4,31 +4,29 @@ from flask import session, abort, request, flash, redirect, render_template
 import db_interfaces.users as users
 import db_interfaces.item as item
 import db_interfaces.orders as orders
+import db_interfaces.companies as companies
 import security
+import pagetools
 
 
 @app.route("/list_supply_orders")
 def list_supply_orders():
     security.has_role([4, 5, 6])
-    security.has_csrf_token(request.form["csrf_token"])
 
-    return render_template("buyer/list_supply_orders.html", orders=orders.get_all_supply_orders())
+    return render_template("buyer/buyer_list_supply_orders.html", page_count=pagetools.supply_order_page_count(), orders=orders.get_all_supply_orders())
 
 
-@app.route("/list_items")
+@app.route("/items")
 def items():
     security.has_role([4, 5, 6])
-    security.has_csrf_token(request.form["csrf_token"])
-
-    return render_template("buyer/list_items.html", items=item.get_all_items())
+    return render_template("buyer/buyer_items.html", page_count=pagetools.item_page_count(), items=item.get_all_items())
 
 
 @app.route("/new_item_form")
 def new_item_form():
     security.has_role([5, 6])
-    security.has_csrf_token(request.form["csrf_token"])
 
-    return render_template("buyer/new_item_form.html")
+    return render_template("buyer/buyer_new_item_form.html")
 
 
 @app.route("/add_new_item", methods=["POST"])
@@ -38,15 +36,19 @@ def add_new_item():
 
     itemname = request.form["name"]
     price = request.form["price"]
+
     item.add_item(itemname, price)
 
-    return redirect("buyer/new_item_form")
+    if security.has_auth([6]):
+        return redirect("/controller_list_items#form")
+
+    return redirect("/items#form")
 
 
 @app.route("/supply_order_form")
 def supply_order_form():
     security.has_role([5, 6])
-    return render_template("buyer/supply_order_form.html", items=item.get_all_items())
+    return render_template("buyer/buyer_supply_order.html", companies=companies.get_all_companies(), items=item.get_all_items())
 
 
 @app.route("/place_supply_order", methods=["POST"])

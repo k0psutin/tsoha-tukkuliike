@@ -1,24 +1,34 @@
 from flask.helpers import flash
+from flask import session
 from db_interfaces.db import db
 
 
+def item_page_count():
+    sql = "SELECT COUNT(*) FROM items"
+    result = db.session.execute(sql)
+    pages = result.fetchone()[0]
+    if pages == None:
+        return 0
+    return int(pages) / 10
+
+
 def add_item(itemname, price):
-    if int(price) < 0:
-        flash("Price can't be a negative value.")
+    if float(price) <= 0:
+        flash("Price must be larger than zero", "danger")
         return 0
 
     if len(itemname) < 3:
-        flash("Item name is too short.")
+        flash("Item name must be longer than two characters", "danger")
         return 0
 
     if get_item_by_name(itemname) != None:
-        flash("Item named %s already exists." % itemname)
+        flash("Item named %s already exists" % itemname, "danger")
         return 0
 
     sql = "INSERT INTO items (itemname, price) VALUES (:itemname, :price)"
     db.session.execute(sql, {"itemname": itemname, "price": price})
     db.session.commit()
-    flash("Added new item %s" % itemname)
+    flash("Added new item %s" % itemname, "success")
 
 
 def get_item_by_id(item_id):
@@ -40,7 +50,10 @@ def get_price(item_id):
 
 
 def get_all_items():
-    result = db.session.execute("SELECT * FROM items")
+    row_count = session["row_count"]
+    offset = session["item"] * 10
+    result = db.session.execute(
+        "SELECT * FROM items LIMIT :row_count OFFSET :offset", {"row_count": row_count, "offset": offset})
     return result.fetchall()
 
 

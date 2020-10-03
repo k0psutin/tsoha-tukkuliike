@@ -9,6 +9,17 @@ import security
 def logout():
     del session["username"]
     del session["auth_lvl"]
+    del session["cart"]
+    del session["supply"]
+    del session["batch"]
+    del session["sale"]
+    del session["item"]
+    del session["batch_page_count"]
+    del session["sale_page_count"]
+    del session["order_page_count"]
+    del session["item_page_count"]
+    del session["row_count"]
+    flash("Logged out successfully", "success")
     return redirect("/")
 
 
@@ -16,8 +27,11 @@ def logout():
 def login():
     username = request.form["username"]
     password = request.form["password"]
-    users.login(username, password)
-    return redirect("/")
+    loggedIn = users.login(username, password)
+    if loggedIn:
+        return redirect("/")
+    else:
+        return render_template("user/login.html", username=username)
 
 
 @app.route("/create_new_user_form")
@@ -38,18 +52,22 @@ def create_new_user():
     password_check = request.form["password_check"]
     auth_lvl = request.form["auth_lvl"]
 
+    if auth_lvl == 'None' or auth_lvl == 0:
+        flash("Enter authorization level (1-6")
+        return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
+
     if len(username) < 4:
-        flash("Username must be at least 4 characters long.")
-        return redirect("/create_new_user_form")
+        flash("Username must be at least 4 characters long.", "danger")
+        return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
 
     if len(password) < 4:
-        flash("Password must be at least 4 characters long.")
-        return redirect("/create_new_user_form")
+        flash("Password must be at least 4 characters long.", "danger")
+        return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
 
     if password != password_check:
-        flash("Passwords doesn't match.")
-        return redirect("/create_new_user_form")
+        flash("Passwords doesn't match.", "danger")
+        return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
     else:
-        flash("User %s created succesfully." % username)
+        flash("User %s created succesfully." % username, "success")
         users.create_user(username, password, auth_lvl)
     return redirect("/create_new_user_form")

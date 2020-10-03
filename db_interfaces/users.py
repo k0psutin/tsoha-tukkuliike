@@ -39,31 +39,46 @@ def create_user():
 def get_user_by_name(username):  # TODO lowercase checks etc...
     sql = "SELECT username, pswd, auth_lvl FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": username})
-    db.session.commit()
+    return result.fetchone()
+
+
+def get_current_user():
+    sql = "SELECT * FROM users WHERE username=:username"
+    result = db.session.execute(sql, {"username": session["username"]})
     return result.fetchone()
 
 
 def login(username, password):
     user = get_user_by_name(username)
     if user == None:
-        flash("Incorrect username or password")
-        return 0
+        flash("User %s does not exist." % username, "danger")
+        return False
     else:
         hash_value = user[1]
         if check_password_hash(hash_value, password):
             session["username"] = username
             session["csrf_token"] = urandom(16).hex()
             session["auth_lvl"] = user[2]
-            return 0
+            session["cart"] = []
+            session["supply"] = 0
+            session["sale"] = 0
+            session["batch"] = 0
+            session["item"] = 0
+            session["row_count"] = 10
+            session["order_page_count"] = 0
+            session["batch_page_count"] = 0
+            session["sale_page_count"] = 0
+            session["item_page_count"] = 0
+            return True
         else:
-            flash("Incorrect username or password")
-            return 0
+            flash("Incorrect password", "danger")
+            return False
 
 
 def create_user(username, password, auth_lvl, company_id=None):
     user = get_user_by_name(username)
     if user != None:
-        flash("Username is taken.")
+        flash("Username is taken.", "error")
         return 0
 
     hash_value = generate_password_hash(password)
@@ -85,3 +100,24 @@ def get_company_id():  # TODO errormessages
     sql = "SELECT company_id FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": username})
     return result.fetchone()[0]
+
+
+def change_password(old_password, validate, new_password):
+    if validate != new_password:
+        flash("Passwords doesn't match!", "danger")
+        return False
+
+    user = get_current_user()
+
+    if check_password_hash(user[2], old_password) == False:
+        flash("Old password is wrong", "danger")
+        return False
+
+    user_id = user[0]
+
+    hash_value = generate_password_hash(new_password)
+    sql = "UPDATE users SET pswd = :password WHERE user_id = :user_id"
+    db.session.execute(sql, {"user_id": user_id, "password": hash_value})
+    db.session.commit()
+    flash("Password changed succesfully", "success")
+    return True

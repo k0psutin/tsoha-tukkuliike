@@ -1,26 +1,50 @@
-from random import randint
-
 from flask.helpers import flash
+from flask import session
 from db_interfaces.db import db
 import db_interfaces.item as item
 import db_interfaces.users as users
 
 
+def get_all_sales_by_company_id(company_id):
+    sql = """SELECT MAX(orders.order_id),
+                    MAX(orders.company_id),
+                    companies.compname,
+                    MAX(orders.orderdate),
+                    SUM(orders.qty) AS qty,
+                    MAX(companies.route)
+             FROM orders
+             INNER JOIN companies ON (orders.company_id = companies.company_id)
+             WHERE orders.supply = false AND orders.company_id = :company_id
+             GROUP BY companies.compname, orders.orderdate
+             ORDER BY orders.orderdate"""
+
+    result = db.session.execute(sql, {"company_id": company_id})
+    orders = result.fetchall()
+    return orders
+
+
+def get_order_date(order_id):
+    sql = "SELECT TO_CHAR(orderdate :: DATE, 'dd Month, yyyy') FROM orders WHERE order_id = :order_id"
+    result = db.session.execute(sql, {"order_id": order_id})
+    order = result.fetchone()
+    return order
+
+
 def get_sale_order(order_id):
     sql = """SELECT orders.item_id,
-                    items.itemname, 
-	                orders.qty AS required, 
-	                (SELECT COALESCE(SUM(qty),0) 
-	                 FROM batchorders 
-	                 WHERE batchorders.item_id = orders.item_id 
+                    items.itemname,
+	                orders.qty AS required,
+	                (SELECT COALESCE(SUM(qty),0)
+	                 FROM batchorders
+	                 WHERE batchorders.item_id = orders.item_id
 	                 AND order_id = :order_id) AS collected_qty,
-	            	orders.qty - (SELECT COALESCE(SUM(qty),0) 
-	                              FROM batchorders 
-	                              WHERE batchorders.item_id = orders.item_id 
+	            	orders.qty - (SELECT COALESCE(SUM(qty),0)
+	                              FROM batchorders
+	                              WHERE batchorders.item_id = orders.item_id
 	                              AND order_id = :order_id) AS remaining_qty,
                      orders.price
               FROM orders
-              INNER JOIN items ON (orders.item_id = items.item_id) 
+              INNER JOIN items ON (orders.item_id = items.item_id)
               WHERE order_id = :order_id;"""
 
     result = db.session.execute(sql, {"order_id": order_id})
@@ -30,40 +54,43 @@ def get_sale_order(order_id):
 
 
 def get_all_sale_orders(show_all=False):
+    row_count = session["row_count"]
+    offset = session["sale"] * 10
     if show_all == False:
-        sql = """SELECT MAX(orders.order_id), 
-                    MAX(orders.company_id), 
-                    companies.compname, 
-                    MAX(orders.orderdate), 
+        sql = """SELECT MAX(orders.order_id),
+                    MAX(orders.company_id),
+                    companies.compname,
+                    MAX(orders.orderdate),
                     SUM(orders.qty) AS qty,
                     MAX(companies.route)
              FROM orders
              INNER JOIN companies ON (orders.company_id = companies.company_id)
-             WHERE orders.supply = false AND orders.order_id
+             WHERE orders.supply = false AND qty > 0 AND orders.order_id
              NOT IN (SELECT shipments.order_id FROM shipments)
              GROUP BY companies.compname, orders.orderdate
-             ORDER BY orders.orderdate"""
+             ORDER BY orders.orderdate LIMIT :row_count OFFSET :offset"""
     else:
-        sql = """SELECT MAX(orders.order_id), 
-                    MAX(orders.company_id), 
-                    companies.compname, 
-                    MAX(orders.orderdate), 
+        sql = """SELECT MAX(orders.order_id),
+                    MAX(orders.company_id),
+                    companies.compname,
+                    MAX(orders.orderdate),
                     SUM(orders.qty) AS qty,
                     MAX(companies.route)
              FROM orders
              INNER JOIN companies ON (orders.company_id = companies.company_id)
-             WHERE orders.supply = false 
+             WHERE orders.supply = false AND qty > 0
              GROUP BY companies.compname, orders.orderdate
-             ORDER BY orders.orderdate"""
+             ORDER BY orders.orderdate LIMIT :row_count OFFSET :offset"""
 
-    result = db.session.execute(sql)
+    result = db.session.execute(
+        sql, {"row_count": row_count, "offset": offset})
     sale_order_list = result.fetchall()
 
     return sale_order_list
 
 
 def get_order_total(order_id):
-    sql = "SELECT SUM(orders.price) FROM orders WHERE order_id = :order_id"
+    sql = "SELECT SUM(orders.price * orders.qty) FROM orders WHERE order_id = :order_id"
     result = db.session.execute(sql, {"order_id": order_id})
     return result.fetchone()[0]
 
@@ -81,10 +108,8 @@ def add_item_to_sale_order(order_id, company_id, item_id, qty):
     sale = result.fetchone()
     qty = int(qty)
 
-    print(sale)
-
     if sale == None:
-        sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id) 
+        sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id)
              VALUES (:order_id, :company_id, :item_id, FALSE, NOW(), NOW() + INTERVAL '1 DAY', :qty, :price, :user_id);"""
         price = round((float(qty) * float(item.get_price(item_id))*1.0), 2)
 
@@ -129,127 +154,107 @@ def update_sale_order_item_qty(order_id, item_list, company_id, qty_list):
     if len(inserts) == 0:
         return
 
-    print(inserts)
-
     db.session.execute(sql, inserts)
     db.session.commit()
 
 
-def create_sale_order(company_id, order_list, qty_list, price_list, user_id):
-    random_number = str(randint(0, 9999999))
-    order_id = random_number.zfill(7)
-    empty_price_list = (len(price_list) == 0)
-
+def create_sale_order(order_id, saleList):
     sql = "SELECT order_id FROM orders WHERE order_id = :order_id"
     result = db.session.execute(sql, {"order_id": order_id})
     if order_id == result.fetchone():
-        flash("Error occurred.")
-        return 0
+        flash("Error occurred.", "danger")
+        return False
 
-    inserts = []
-
-    for i in range(len(order_list)):
-        if int(qty_list[i]) < 0:
-            flash("Negative quantity is not allowed.")
-            return 0
-
-        if empty_price_list:
-            insert = {'order_id': order_id,
-                      'company_id': company_id,
-                      'item_id': order_list[i],
-                      'qty': qty_list[i],
-                      'user_id': user_id}
-        else:
-            if float(price_list[i]) < 0:
-                flash("Negative price is not allowed.")
-                return 0
-
-            insert = {'order_id': order_id,
-                      'company_id': company_id,
-                      'item_id': order_list[i],
-                      'qty': qty_list[i],
-                      'price': float(qty_list[i]) * float(price_list[i]),
-                      'user_id': user_id}
-
-        inserts.append(insert)
-
-    if empty_price_list:
-        sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id) 
-             VALUES (:order_id, :company_id, :item_id, FALSE, NOW(), NOW() + INTERVAL '1 DAY', :qty, (SELECT SUM(:qty*items.price*1.0)::float FROM items WHERE item_id = :item_id), :user_id);"""
-
-    else:
-        sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id) 
+    sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id)
              VALUES (:order_id, :company_id, :item_id, FALSE, NOW(), NOW() + INTERVAL '1 DAY', :qty, :price, :user_id);"""
 
-    db.session.execute(sql, inserts)
+    db.session.execute(sql, saleList)
     db.session.commit()
 
     return order_id
 
 
-def get_all_supply_orders():
-    sql = """SELECT orders.order_id, orders.company_id, companies.compname, companies.country, orders.orderdate, orders.item_id, items.itemname, orders.qty
-           FROM orders
-           INNER JOIN companies ON 
-           (orders.company_id = companies.company_id)
-           INNER JOIN items ON
-           (orders.item_id= items.item_id) WHERE orders.supply = true AND orders.qty > 0 
-           ORDER BY orders.orderdate"""
+def get_orders_page_count(supply):
+    sql = "SELECT COUNT(*) FROM orders WHERE qty > 0 AND supply = :supply"
+    result = db.session.execute(sql, {"supply": supply})
+    return result.fetchone()
+
+
+def get_all_sale_order_page_count(show_all):
+    if show_all == False:
+        sql = """SELECT MAX(orders.order_id),
+                    MAX(orders.company_id),
+                    companies.compname,
+                    MAX(orders.orderdate),
+                    SUM(orders.qty) AS qty,
+                    MAX(companies.route)
+             FROM orders
+             INNER JOIN companies ON (orders.company_id = companies.company_id)
+             WHERE orders.supply = false AND qty > 0 AND orders.order_id
+             NOT IN (SELECT shipments.order_id FROM shipments)
+             GROUP BY companies.compname, orders.orderdate
+             ORDER BY orders.orderdate"""
+    else:
+        sql = """SELECT MAX(orders.order_id),
+                    MAX(orders.company_id),
+                    companies.compname,
+                    MAX(orders.orderdate),
+                    SUM(orders.qty) AS qty,
+                    MAX(companies.route)
+             FROM orders
+             INNER JOIN companies ON (orders.company_id = companies.company_id)
+             WHERE orders.supply = false AND qty > 0
+             GROUP BY companies.compname, orders.orderdate
+             ORDER BY orders.orderdate"""
 
     result = db.session.execute(sql)
-    supply_order_list = result.fetchall()
+    count = result.fetchall()
+    return count
 
-    return supply_order_list
+
+def get_all_supply_orders():
+    row_count = session["row_count"]
+    offset = session["supply"] * 10
+    sql = """SELECT orders.order_id, orders.company_id, companies.compname, companies.country, orders.orderdate, orders.item_id, items.itemname, orders.qty
+           FROM orders
+           INNER JOIN companies ON
+           (orders.company_id = companies.company_id)
+           INNER JOIN items ON
+           (orders.item_id= items.item_id) WHERE orders.supply = TRUE AND orders.qty > 0
+           ORDER BY orders.orderdate LIMIT :row_count OFFSET :offset"""
+
+    result = db.session.execute(
+        sql, {"row_count": row_count, "offset": offset})
+    return result.fetchall()
 
 
-def create_supply_order(company_id_list, item_list, qty_list, price_list, user_id):
-    inserts = []
+def create_supply_order(orderList):
 
-    for i in range(len(item_list)):
-        random_number = str(randint(0, 9999999))
-        order_id = random_number.zfill(7)
-
-        if float(price_list[i]) < 0:
-            flash("Negative prices not allowed.")
-            return 0
-
-        if int(qty_list[i]) < 0:
-            flash("Negative quantity is not allowed.")
-            return 0
-
-        insert = {'order_id': order_id,
-                  'company_id': company_id_list[i],
-                  'item_id': item_list[i],
-                  'qty': qty_list[i],
-                  'user_id': user_id,
-                  'price': price_list[i]}
-
-        inserts.append(insert)
-
-    sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id) 
+    sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id)
              VALUES (:order_id, :company_id, :item_id, TRUE, NOW(), NOW() + INTERVAL '1 DAY', :qty, :price, :user_id);"""
 
-    db.session.execute(sql, inserts)
+    db.session.execute(sql, orderList)
     db.session.commit()
 
 
 def delete_order_by_order_id(order_id):
     sql = "DELETE FROM orders WHERE order_id = :order_id"
     db.session.execute(sql, {"order_id": order_id})
-    flash("Order %s removed successfully" % order_id)
+    db.session.commit()
+    flash("Order %s removed successfully" % order_id, "success")
 
 
 def get_company_by_order_id(order_id, supply=False):
-    sql = """SELECT companies.compname, 
-                    companies.address, 
-                    companies.email, 
+    sql = """SELECT companies.compname,
+                    companies.address,
+                    companies.email,
                     companies.country,
-                    companies.company_id 
-            FROM orders 
+                    companies.company_id
+            FROM orders
             INNER JOIN companies ON (companies.company_id = orders.company_id)
             WHERE order_id=:order_id AND supply = :supply"""
     result = db.session.execute(sql, {"order_id": order_id, "supply": supply})
     if result == None:
-        flash("Wrong order id.")
+        flash("Wrong order id.", "danger")
         return 0
     return result.fetchone()

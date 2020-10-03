@@ -3,8 +3,8 @@ from app import app
 
 import db_interfaces.users as users
 import db_interfaces.logistics as logistics
-import db_interfaces.item as item
 import db_interfaces.orders as orders
+import pagetools
 
 
 @app.route("/")
@@ -34,23 +34,24 @@ def error():
 
 
 def customer():
-    return render_template("company/company_order.html", company_id=users.get_company_id(), items=item.get_all_items())
+    company_id = users.get_company_id()
+    return render_template("company/company.html", company_id=company_id, orders=orders.get_all_sales_by_company_id(company_id))
 
 
 def logistic():
-    return render_template("logistic/logistics.html", orders=orders.get_all_supply_orders())
+    return render_template("logistic/logistics.html", page_count=pagetools.supply_order_page_count(), orders=orders.get_all_supply_orders())
 
 
 def collector():
-    return render_template("collector/collector.html", orders=orders.get_all_sale_orders(), batches=logistics.get_all_batches())
+    return render_template("collector/collector.html", page_count=pagetools.sales_page_count(), orders=orders.get_all_sale_orders())
 
 
 def sales():
-    return render_template("sale/sales.html")
+    return render_template("sale/sales.html", page_count=pagetools.batch_page_count(), batches=logistics.get_all_batches())
 
 
 def buyer():
-    return render_template("buyer/buyer.html")
+    return render_template("buyer/buyer.html", page_count=pagetools.batch_page_count(), batches=logistics.get_all_batches())
 
 
 def controller():
