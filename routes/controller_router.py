@@ -11,7 +11,7 @@ import pagetools
 @app.route("/controller_supply_orders")
 def controller_supply_orders():
     security.has_role([6])
-    return render_template("controller/controller_supply.html", page_count=pagetools.order_page_count(), orders=orders.get_all_supply_orders())
+    return render_template("controller/controller_supply.html", page_count=pagetools.supply_order_page_count(), orders=orders.get_all_supply_orders())
 
 
 @app.route("/controller_batches")
