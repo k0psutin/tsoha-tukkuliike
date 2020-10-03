@@ -103,7 +103,6 @@ def remove_item_from_sale_order(item_id, order_id):
     sql = "SELECT COUNT(*) FROM orders WHERE order_id = :order_id"
     result = db.session.execute(sql, {"order_id": order_id})
     count = result.fetchone()[0]
-    print(count)
     if count == None or count == 0:
         delete_order_by_order_id(order_id)
         return True
