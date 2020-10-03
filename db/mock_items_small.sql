@@ -1,0 +1,10 @@
+insert into items (item_id, itemname, price, closed) values (1, 'Tea - Jasmin Green', 0.92, false);
+insert into items (item_id, itemname, price, closed) values (2, 'Grapes - Red', 0.76, false);
+insert into items (item_id, itemname, price, closed) values (3, 'Coffee - Ristretto Coffee Capsule', 1.36, false);
+insert into items (item_id, itemname, price, closed) values (4, 'Nantucket - 518ml', 1.07, false);
+insert into items (item_id, itemname, price, closed) values (5, 'Ice Cream - Strawberry', 3.07, false);
+insert into items (item_id, itemname, price, closed) values (6, 'Spinach - Frozen', 0.76, false);
+insert into items (item_id, itemname, price, closed) values (7, 'Pea - Snow', 1.1, false);
+insert into items (item_id, itemname, price, closed) values (8, 'Cranberries - Dry', 1.41, false);
+insert into items (item_id, itemname, price, closed) values (9, 'Dried Cranberries', 2.83, false);
+insert into items (item_id, itemname, price, closed) values (10, 'Grapefruit - Pink', 2.67, false);
