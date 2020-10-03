@@ -1,0 +1,19 @@
+<div class="text-center">
+<h2>Order {{ order_id }} details</h2>
+</div>
+<div style="container-sm">
+<table class="table table-hover table-sm">
+  <thead class="thead-dark">
+    <th scope="col">Item name</th>
+    <th scope="col">Remaining qty</th>
+    <th scope="col">Collected qty</th>
+  </tr>
+  {% for order in orderdetails %}
+  <tr>
+    <td>{{ order[1] }}</td>
+    <td>{{ order[4] }}</td>
+    <td>{{ order[3] }}</td>
+  </tr>
+  {% endfor %}
+</table>
+

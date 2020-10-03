@@ -1,16 +1,12 @@
 {% extends "layout.html" %} 
 {% block title %}Logistics{% endblock %} 
 {% block upper_content %}
-<a href="/">Supply order list</a>
-<br>
-<a href="/supply_order_inventory">Supply order inventory</a>
-<br>
-<a href="/batch_inventory">Batch inventory</a>
-<br>
-<h1>Virtual view of supply orders</h1>
-{% include "/logistic/list_supply_orders.html" %} 
+{% with main_view = true %}
+    {% include "/logistic/logistic_layout.html" %}
+{% endwith %}
+{% include "/logistic/logistic_list_supply_orders.html" %} 
 {% endblock %} 
 {% block lower_content %} 
-{% include "/logistic/create_new_batch.html" %} 
+{% include "/logistic/logistic_create_new_batch.html" %} 
 {% endblock %}
 {% block back %}{% endblock %}

@@ -1,0 +1,104 @@
+<script src="{{url_for('static', filename='js/utils.js')}}"></script>
+{% extends "layout.html" %} 
+{% block title %}Sale{% endblock %} 
+{% block upper_content %}
+{% with sale_orders = true %}
+{% include "/sale/sale_layout.html" %}
+{% endwith %}
+{% endblock %}
+{% block lower_content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+          <form onsubmit="return showConfirm('{{ order_id }}')" method="POST" action="/delete_order">
+          <h3 class="text-right" style="display: inline-block;">Order # {{ order_id }} <button class="btn" type="submit">Delete</button>
+          <input type="hidden" value="{{ order_id }}" name="order_id" />
+          <input type="hidden" value="{{ session.csrf_token }}" name="csrf_token" />
+          </form>
+          </h3>
+        <hr>
+    		<div class="row">
+    			<div class="col">
+    				<address>
+    				<strong>Billed To:</strong><br>
+    					{{ company[0] }}<br>
+    					{{ company[1] }}<br>
+    					{{ company[3] }}
+    				</address>
+    			</div>
+    			<div class="coltext-right">
+    				<address>
+        			<strong>Shipped To:</strong><br>
+    					{{ company[0] }}<br>
+    					{{ company[1] }}<br>
+    					{{ company[3] }}
+    				</address>
+    			</div>
+    		</div>
+    		<div class="row">
+    			<div class="col">
+    				<address>
+    					<strong>Payment Method:</strong><br>
+    					Bill<br>
+    					{{ company[2] }}
+    				</address>
+    			</div>
+    			<div class="col text-right">
+    				<address>
+    					<strong>Order Date:</strong><br>
+    					<br>{{ order_date }}<br>
+    				</address>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    
+    <div class="row">
+    	<div class="col-md-12">
+    		<div class="panel panel-default">
+    			<div class="panel-heading">
+    				<h3 class="panel-title"><strong>Order summary</strong></h3>
+    			</div>
+    			<div class="panel-body">
+    				<div class="table-responsive">
+
+    					<table class="table table-condensed">
+    						<thead>
+                                <tr>
+        							<td><strong>Item</strong></td>
+        							<td class="text-center"><strong>Price</strong></td>
+        							<td class="text-center"><strong>Quantity</strong></td>
+        							<td class="text-right"><strong>Totals</strong></td>
+                      <td></td>
+                                </tr>
+    						</thead>
+    						<tbody>
+                {% for item in order %}
+                <form action="/remove_item_from_sale_order" onsubmit="return confirm('Remove {{ item_name }} from order?'">
+                <tr>
+    								<td><button class="btn" type="submit">Delete</button> {{ item[1] }}</td>
+    								<td class="text-center">{{ item[5] }}</td>
+    								<td class="text-center">{{ item[2] }}</td>
+    								<td class="text-right">{{ (item[5] * item[2]) }}</td>
+    							</tr>
+                <input type="hidden" name="order_id" value="{{ order_id }}" />
+                <input type="hidden" name="item_id" value="{{ item[0] }}" />
+                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+                </form>
+                {% endfor %}
+    							<tr style="border-top: none; border-bottom: none; border-top: 2px solid;">
+    								<td class="no-line"></td>
+    								<td class="no-line"></td>
+    								<td class="no-line text-center"><strong>Total</strong></td>
+    								<td class="no-line text-right">{{ total }}</td>
+    							</tr>
+    						</tbody>
+    					</table>
+    				</div>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+    <input type="button" class="form-control" value="Back" onclick=window.history.back()>
+</div>
+{% endblock %}

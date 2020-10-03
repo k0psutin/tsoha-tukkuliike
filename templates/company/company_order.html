@@ -1,19 +1,88 @@
-{% extends "layout.html" %} 
-{% block title %}Company{% endblock %} 
-{% block header %}Place new order{% endblock %}
-{% block upper_content %}
-<form action="/place_order" method="POST">
-  {% for item in items %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='js/cartController.js')}}"></script>
+<div class="text-center">
+  <h2>Place new order</h2>
+</div>
+<div class="col-3 justify-content-left align-items-center container">
+  <div class="form-group">
+    <form id="item_form">
+    <input id="csrf" type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+      <div class="form-group">
+        <label for="item">Item</label>
+          <select aria-describedby="itemHelp" class="custom-select" id="items" name="item_id" required="true">
+            <option value ="">Choose item</option>
+            {% for item in items %} 
+            <option value="{{ item[0] }}" id="item_id">{{ item[1] }}</option>
+           </form>
+           {% endfor %}
+           {% for item in items %}
+           <form id="{{ item[1] }}" style="display: none">
+           <input id="{{ item[0] * 10 }}" type="hidden" name="price" value="{{ item[2] }}" />
+           </form>
+          {% endfor %}
+        </select>
+        <small class="text-danger" id="itemHelp" class="form-text text-muted"></small>
+      </div>
+  <div class="form-group">
+  <label for="qty">Quantity</label>
+  <input aria-describedby="qtyHelp"  class="form-control" id="qty" name="qty" type="number" required="true">
+  <small class="text-danger" id="qtyHelp" class="form-text text-muted"></small>
+  </div>
+  <div class="form-group">
+  <label for="qty">Price</label>
+  <input disabled="true" aria-describedby="priceHelp"  class="form-control" id="price" name="price" step="0.01" type="number" required="true">
+  <small class="text-danger" id="priceHelp" class="form-text text-muted"></small>
+  </div>
+  <div class="form-group">
+  <input class="form-control" type="button" onclick=addToCart(true) value="Add">
+  </div>
+  <div class="form-group">
+  <button id="showCart" onclick=getCart() class="form-control" type="button" disabled="true" data-toggle="modal" data-target="#cartWindow">Show cart</button>
+  </div>
+  <!-- Cart window start -->
+  <!-- Cart window -->
+<div id="cartWindow" class="modal fade" role="dialog">
+  <div class="modal-dialog">
 
-  <p>
-    <input type="checkbox" name="item_id" value="{{ item[0] }}" />
-    {{ item[1] }} - {{ item[2] }}e/pc
-    <input type="number" name="qty" value="qty" />
-  </p>
-  {% endfor %}
-  <input type="submit" value="Send" />
-  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
-  <input type="hidden" name="company_id" value="{{ company_id }}" />
+    <!-- Cart window content-->
+    <div class="modal-content">
+      <div class="modal-header">
+       <h4 class="modal-title">Cart</h4>
+        <button id="closeCart" type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div id="modalBody" class="modal-body">
+       
+      </div>
+      <div class="modal-footer justify-content-between">
+          <button id="closeCart" type="button" class="btn mr-auto" data-dismiss="modal">Close</button>
+          <button id="order" type="button" class="btn mr-auto" data-toggle="modal" data-target="#confirmOrder">Order</button>
+          <button class="btn" type="button" onclick=clearCart()>Clear cart</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+  <!-- Cartwindow end -->
+    <!-- Confirm order start -->
+  <!-- Confirm order -->
+<div style="top:40%;" id="confirmOrder" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Confirm order content-->
+    <div class="modal-content">
+      <div id="modalBody" class="modal-body">
+      <h4 class="text-center">Order items</h4>
+      </div>
+      <div class="modal-footer justify-content-between">
+          <button id="finishOrder"  type="button" class="btn" onclick="makeOrder(false, true)">Ok</button>
+          <button id="cancelOrder" type="button" class="btn" data-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+  <!-- Confirm order end -->
+ 
 </form>
-{% endblock %}
-
+</div>
+</div>

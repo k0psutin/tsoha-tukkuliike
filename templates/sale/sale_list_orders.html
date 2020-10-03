@@ -1,0 +1,13 @@
+{% extends "layout.html" %} 
+{% block title %}Sales{% endblock %} 
+{% block header %}Sales view{% endblock %}
+{% with sale_orders = true %}
+{% include "/sale/sale_layout.html" %}
+{% endwith %}
+{% block upper_content %} 
+{% include "/sale/sale_order_list.html" %}
+{% with current_page = session.sale, type = "sale", page_count = session.sale_page_count, page_count_name ="sale_page_count" %}
+{% include "/pagination.html" %}
+{% endwith %}
+{% endblock %}
+{% block lower_content %}{% endblock %}

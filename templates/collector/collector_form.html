@@ -1,0 +1,32 @@
+<script src="{{url_for('static', filename='js/utils.js')}}"></script>
+<div class="text-center">
+<h2>Collect item</h2>
+</div>
+<div class="d-flex justify-content-center align-items-center container">
+<div class="form-group">
+<form action="/collect_batch" method="POST">
+<label for="batch_nr">Batch NR
+<input class="form-control" required="true" type="text" name="batch_nr" id="batch_nr">
+<label for="qty">Collected</label>
+<input class="form-control" required="true" min="0" type="number" name="qty" id="qty">
+<button class="form-control"  type="submit" class="btn btn-primary">Collect</button>
+<input type="hidden" name="order_id" value="{{ order_id }}">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+</div>
+</div>
+<div class="d-flex justify-content-center align-items-center container">
+<div class="form-group">
+<form onsubmit="return confirmShipment('{{ order_id }}')" method="POST" action="/create_shipment">
+<button class="form-control"  type="submit" class="btn btn-primary">Complete shipment</button>
+<input type="hidden" name="order_id" value="{{ order_id }}">
+<input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+<br>
+  <input
+    type="button"
+    class="form-control"
+    value="Back"
+    onclick="window.history.back()">
+</div>
+</div>

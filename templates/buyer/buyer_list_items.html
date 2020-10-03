@@ -1,0 +1,22 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="{{url_for('static', filename='js/pageController.js')}}"></script>
+<div class="text-center">
+  <h1>Items list</h1>
+</div>
+<div class="container mx-auto" style="width: 30%">
+  <table class="table table-striped">
+    <thead class="thead-dark">
+      <th class="col">Item name</th>
+      <th class="col">Price</th>
+    </thead>
+    {% for item in items %}
+    <tr>
+      <th class="col">{{ item[1] }}</th>
+      <th class="col">{{ item[2] }}</th>
+    </tr>
+    {% endfor %}
+  </table>
+ {% with current_page = session.item, type = "item", page_count_name = "item_page_count", page_count = session.item_page_count %}
+  {% include "pagination.html" %}
+  {% endwith %}
+</div>

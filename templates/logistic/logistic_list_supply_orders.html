@@ -1,0 +1,32 @@
+<div class="text-center">
+<h2> Supply orders</h2>
+</div>
+<div style="container">
+<table class="table table-striped table-sm">
+   <thead class="thead-dark">
+   <tr class="d-flex">
+    <th class="col-1">Order id</th>
+    <th class="col-3 text-center">Supplier name</th>
+    <th class="col-2">Countrycode</th>
+    <th class="col-2">Order date</th>
+    <th class="col-2">Item name</th>
+    <th class="col-2">Item qty</th>
+   </tr>
+  </thead>
+  <tbody>
+  {% for order in orders %}
+  <tr class="d-flex">
+    <td class="col-1">{{ order[0] }}</td>
+    <td class="col-3 text-left">{{ order[2] }}</td>
+    <td class="col-2">{{ order[3] }}</td>
+    <td class="col-2">{{ order[4] }}</td>
+    <td class="col-2">{{ order[6] }}</td>
+    <td class="col-2">{{ order[7] }}</td>
+  </tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% with current_page = session.supply, type = "supply", page_count = session.order_page_count, page_count_name ="order_page_count" %}
+{% include "pagination.html" %}
+{% endwith %}
+</div>

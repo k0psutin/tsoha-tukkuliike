@@ -1,7 +1,9 @@
 {% extends "layout.html" %} 
 {% block title %}Controller{% endblock %} 
-{% block upper_content %}
 {% include "controller/controller_layout.html" %}
+{% block upper_content %} 
+{% include "/buyer/buyer_list_items.html" %}
 {% endblock %}
-{% block lower_content %} 
+{% block lower_content %}
+{% include "/buyer/buyer_new_item_form.html" %}
 {% endblock %}

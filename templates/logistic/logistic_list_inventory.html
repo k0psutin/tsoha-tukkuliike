@@ -1,0 +1,26 @@
+<div class="text-center">
+<h2>Batches</h2>
+</div>
+<div style="container-sm">
+<table class="table table-striped table-sm">
+  <thead class="thead-dark">
+  <tr class="d-flex">
+     <th class="col-3">Batch nr.</th>
+     <th class="col-3">Item name</th>
+     <th class="col-3">Quantity</th>
+     <th class="col-3">Date</th>
+  </tr>
+  </thead>
+  {% for batch in batches %}
+  <tr class="d-flex"> <!-- TODO add d-flex and colum widths -->
+    <td class="col-3">{{ batch[0] }}</td>
+    <td class="col-3">{{ batch[1] }}</td>
+    <td class="col-3">{{ batch[2] }}</td>
+    <td class="col-3">{{ batch[3].strftime('%Y-%m-%d') }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% with current_page = session.batch, type = "batch", page_count_name = "batch", page_count = session.batch_page_count %}
+{% include "pagination.html" %}
+{% endwith %}
+</div>

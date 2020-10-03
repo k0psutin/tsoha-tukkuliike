@@ -1,0 +1,11 @@
+{% extends "layout.html" %} 
+{% block title %}Company{% endblock %} 
+{% block header %}Place new order{% endblock %}
+{% block upper_content %}
+{% with main_view = true %}
+{% include "/company/company_layout.html" %}
+{% endwith %}
+{% endblock %}
+{% block lower_content %}
+{% include "/company/company_order_list.html" %}
+{% endblock %}

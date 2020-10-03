@@ -1,0 +1,66 @@
+{% extends "layout.html" %}
+{% block title %}Company{% endblock %}
+{% block header %}Place new order{% endblock %}
+{% with company_info = true %}
+{% include "/company/company_layout.html" %}
+{% endwith %}
+{% block upper_content %}
+<div class="d-flex justify-content-center">
+    <ul class="list-group col-5">
+        <li class="list-group-item list-group-item-dark p-1">
+            Username:
+        </li>
+        <li class="list-group-item">
+            {{ user[1] }}
+        </li>
+        <li class="list-group-item list-group-item-dark p-1">
+            Company name:
+        </li>
+        <li class="list-group-item">
+            {{ company[1] }}
+        </li>
+        <li class="list-group-item list-group-item-dark p-1">
+            Address:
+        </li>
+        <li class="list-group-item">
+            {{ company[2] }}
+        </li>
+        <li class="list-group-item list-group-item-dark p-1">
+            Email:
+        </li>
+        <li class="list-group-item">
+            {{ company[3] }}
+        </li>
+        <li class="list-group-item list-group-item-dark p-1">
+            Country:
+        </li>
+        <li class="list-group-item">
+            {{ company[4] }}
+        </li>
+    </ul>
+</div>
+{% endblock %}
+<br>
+{% block lower_content %}
+<div class="d-flex justify-content-center align-items-center container">
+<div class="form-group">
+<h2>Change password</h2>
+<form action="/company_change_password" method="POST">
+  <label for="orderId">Old password</label>
+  <div class="input-group mb-3">
+  <input class="form-control" type="password" required="true" name="old_password" id="password">
+  </div>
+  <label for="orderId">New password</label>
+  <div class="input-group mb-3">
+  <input class="form-control" type="password" required="true" name="new_password"  id="show_hide_password">
+  </div>
+  <label for="quantity">Re-type new password</label>
+  <div class="input-group mb-3">
+  <input class="form-control" type="password" required="true" name="validate" id="validate">
+  </div>
+  <input class="form-control" type="submit" value="Send">
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+</div>
+</div>
+{% endblock %}

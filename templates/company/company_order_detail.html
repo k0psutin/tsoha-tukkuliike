@@ -1,0 +1,99 @@
+<br />
+<br />
+<br />
+<br />
+<div class="container">
+  <div class="row">
+    <div class="col">
+      <h3 class="text-right" style="display: inline-block">
+        Order # {{ order_id }}
+      </h3>
+      <hr />
+      <div class="row">
+        <div class="col">
+          <address>
+            <strong>Billed To:</strong><br />
+            {{ company[0] }}<br />
+            {{ company[1] }}<br />
+            {{ company[3] }}
+          </address>
+        </div>
+        <div class="coltext-right">
+          <address>
+            <strong>Shipped To:</strong><br />
+            {{ company[0] }}<br />
+            {{ company[1] }}<br />
+            {{ company[3] }}
+          </address>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col">
+          <address>
+            <strong>Payment Method:</strong><br />
+            Bill<br />
+            {{ company[2] }}
+          </address>
+        </div>
+        <div class="col text-right">
+          <address>
+            <strong>Order Date:</strong><br />
+            <br />{{ order_date }}<br />
+          </address>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading">
+          <h3 class="panel-title"><strong>Order summary</strong></h3>
+        </div>
+        <div class="panel-body">
+          <div class="table-responsive">
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <td><strong>Item</strong></td>
+                  <td class="text-center"><strong>Price</strong></td>
+                  <td class="text-center"><strong>Quantity</strong></td>
+                  <td class="text-right"><strong>Totals</strong></td>
+                </tr>
+              </thead>
+              <tbody>
+                {% for item in order %}
+                <tr>
+                  <td>{{ item[1] }}</td>
+                  <td class="text-center">{{ item[5] }}</td>
+                  <td class="text-center">{{ item[2] }}</td>
+                  <td class="text-right">{{ (item[5] * item[2]) }}</td>
+                </tr>
+                {% endfor %}
+                <tr
+                  style="
+                    border-top: none;
+                    border-bottom: none;
+                    border-top: 2px solid;
+                  "
+                >
+                  <td class="no-line"></td>
+                  <td class="no-line"></td>
+                  <td class="no-line text-center"><strong>Total</strong></td>
+                  <td class="no-line text-right">{{ total }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <input
+    type="button"
+    class="form-control"
+    value="Back"
+    onclick="window.history.back()"
+  />
+</div>

@@ -1,0 +1,28 @@
+<div class="d-flex justify-content-center align-items-center container">
+<div class="form-group">
+<h2>Create new batch</h2>
+<form action="/create_batch" method="POST">
+  <label for="orderId">Order ID</label>
+  <div class="input-group mb-3">
+    <select class="custom-select" id="order_id" name="order_id" required="true">
+    <option value="">Select order id
+        {% for order in orders %}
+    <option value="{{ order[0] }}">{{ order[0] }}</option>
+        {% endfor %}
+    </select>
+  </div>
+  <!-- 
+  <input class ="form-control"  type="text" required="true" name="order_id" id="orderId"> 
+  -->
+  <label for="quantity">Quantity</label>
+  <div class="input-group mb-3">
+    <input class ="form-control" type="number" min="0" required="true" name="qty" id="quantity">
+  </div>
+  <div class="input-group mb-3">
+    <input class ="form-control" id="form" type="submit" value="Create">
+  </div>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+  </div>
+</form>
+</div>
+</div>

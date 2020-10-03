@@ -2,8 +2,8 @@
 {% block title %}Buyer{% endblock %} 
 {% block header %}Buyer view{% endblock %}
 {% block upper_content %} 
-{% with main_view = true %}
+{% with form = true %}
 {% include "/buyer/buyer_layout.html" %}
 {% endwith %}
-{% include "/logistic/logistic_list_inventory.html" %}
+{% include "buyer/buyer_supply_order_form.html" %}
 {% endblock %}

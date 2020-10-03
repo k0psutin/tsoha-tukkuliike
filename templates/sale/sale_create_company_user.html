@@ -1,0 +1,8 @@
+{% extends "layout.html" %} 
+{% block title %}Sales{% endblock %} 
+{% block upper_content %}
+{% with create_company_user = true %}
+{% include "/sale/sale_layout.html" %}
+{% endwith %}
+{% include "/user/create_company_user.html" %}
+{% endblock %}

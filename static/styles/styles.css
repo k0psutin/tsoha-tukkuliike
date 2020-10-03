@@ -1,0 +1,89 @@
+.input-group-prepend {
+  width: 35%; /*adjust as needed*/
+}
+
+.input-group-prepend label {
+  width: 100%;
+  overflow: hidden;
+}
+
+body {
+  background-color: #fafafa;
+}
+
+/*
+* nav-pills
+*/
+.nav-pills {
+  padding-top: 2px;
+  padding-bottom: 2px;
+  height: 32px;
+}
+.nav-pills > li {
+  height: 32px;
+}
+.nav-pills > li > a {
+  padding-top: 6px;
+  color: gray;
+  background-color: #fafafa;
+  height: 32px;
+}
+.nav-pills > li > a:hover,
+.nav-pills > li.hover > a {
+  color: black;
+  background-color: #fafafa;
+}
+.nav-pills > li.active > a {
+  color: black;
+  background-color: #fafafa;
+}
+
+/*
+* nav-pills dropdown 
+*/
+.nav.nav-pills > li.dropdown.active.open > a,
+.nav.nav-pills > li.dropdown.active.open > ul.dropdown-menu a:hover,
+.nav.nav-pills > li.dropdown.open > a,
+.nav.nav-pills > li.dropdown.open > ul.dropdown-menu a:hover {
+  color: gray;
+  background-color: #fafafa;
+}
+.nav.nav-pills > li.dropdown.active.open > a,
+.nav.nav-pills > li.dropdown.active.open > ul.dropdown-menu a:hover,
+.nav.nav-pills > li.dropdown.open > a,
+.nav.nav-pills > li.dropdown.open > ul.dropdown-menu a:hover {
+  color: white;
+  background-color: #fafafa;
+}
+
+/*
+* nav-pills dropdown-menu
+*/
+.nav-pills > li > ul.dropdown-menu {
+  background-color: #fafafa;
+}
+.nav-pills > li > .dropdown-menu > li > a {
+  color: gray;
+
+  background-color: #fafafa;
+}
+.nav-pills > li > dropdown-menu > li > a:hover,
+.nav-pills > li > dropdown-menu > li.hover > a {
+  color: black;
+  background-color: #fafafa;
+}
+.nav-pills > li > dropdown-menu > li.active > a {
+  color: gray;
+  background-color: #fafafa;
+}
+
+.dropdown-menu > li > a {
+  color: black;
+  background-color: #fafafa;
+}
+
+.dropdown-toggle > li > a {
+  color: black;
+  background-color: #fafafa;
+}
+

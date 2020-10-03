@@ -1,0 +1,16 @@
+<div class="d-flex justify-content-center align-items-center container">
+  <div class="form-group">
+    <h2>Update order quantity</h2>
+    <form action="/update_supply_order" method="POST">
+      <br />
+      <label for="orderId">Order ID</label>
+      <input class ="form-control" type="text" required="true" name="order_id" id="orderId">
+      <br />
+      <label for="qty">Quantity</label>
+      <input class ="form-control" type="text" required="true" name="qty" id="qty">
+      <br />
+      <input class ="form-control" id="form" type="submit" value="Send">
+      <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+    </form>
+  </div>
+</div>

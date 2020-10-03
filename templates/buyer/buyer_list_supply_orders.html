@@ -2,8 +2,10 @@
 {% block title %}Buyer{% endblock %} 
 {% block header %}Buyer view{% endblock %}
 {% block upper_content %} 
-{% with main_view = true %}
+{% with orders = true %}
 {% include "/buyer/buyer_layout.html" %}
 {% endwith %}
-{% include "/logistic/logistic_list_inventory.html" %}
+{% endblock %} 
+{% block lower_content %} 
+{% include "/logistic/logistic_list_supply_orders.html" %}
 {% endblock %}

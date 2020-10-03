@@ -1,7 +1,7 @@
 {% extends "layout.html" %} 
 {% block title %}Controller{% endblock %} 
-{% block upper_content %}
 {% include "controller/controller_layout.html" %}
-{% endblock %}
+{% include "/logistic/logistic_list_supply_orders.html" %} 
 {% block lower_content %} 
+{% include "/logistic/logistic_supply_inventory_form.html" %} 
 {% endblock %}

@@ -1,0 +1,28 @@
+{% extends "layout.html" %} 
+{% block title %}Controller{% endblock %} 
+{% include "controller/controller_layout.html" %}
+{% block lower_content %}
+<div class="text-center">
+<h2>Orders</h2>
+</div>
+<div style="container-sm">
+<table class="table table-hover table-sm">
+  <thead class="thead-dark">
+     <th scope="col">Order ID</th>
+     <th scope="col">Company name</th>
+     <th scope="col">Route</th>
+     <th scope="col">Total quantity</th>
+     <th scope="col">Order date</th>
+  </thead>
+{% for order in orders %}
+<tr onclick="window.location='/order_summary/{{ order[0] }}';">
+  <td>{{ order[0] }}</td>
+  <td>{{ order[2] }}</td>
+  <td>{{ order[5] }}</td>
+  <td>{{ order[4] }}</td>
+  <td>{{ order[3].strftime('%Y-%m-%d') }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>
+{% endblock %}

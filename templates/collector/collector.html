@@ -1,8 +1,12 @@
 {% extends "layout.html" %} 
 {% block title %}Collector view{% endblock %} 
-{% block upper_content %} 
-<h2>Open orders</h2>
-{% include "/collector/list_all_orders.html" %}
+{% block upper_content %}
+{% with main_view = true %}
+{% include "/collector/collector_layout.html" %}
+{% endwith %}
+{% endblock %}
+{% block lower_content %} 
+{% include "/collector/collector_list_all_orders.html" %}
 {% endblock %}
 {% block back %}
 {% endblock %}

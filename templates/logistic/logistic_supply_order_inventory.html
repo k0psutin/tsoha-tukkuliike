@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block title %}Logistics{% endblock %}
+{% block upper_content %}
+{% with supply_inventory = true %}
+{% include "/logistic/logistic_layout.html" %}
+{% endwith %}
+{% include "/logistic/logistic_list_supply_orders.html" %} 
+{% endblock %} 
+{% block lower_content %}
+{% include "/logistic/logistic_supply_inventory_form.html" %} 
+{% endblock %}
+{% block back %}{% endblock %}

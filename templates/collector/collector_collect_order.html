@@ -1,0 +1,10 @@
+{% extends "layout.html" %} 
+{% block title %}Collector view{% endblock %} 
+{% block upper_content %} 
+{% include "/collector/collector_layout.html" %}
+{% include "/logistic/logistic_list_inventory.html" %} 
+{% endblock %}
+{% block lower_content %}
+{% include "collector/collector_order_detail.html" %}
+{% include "collector/collector_form.html" %}
+{% endblock %}

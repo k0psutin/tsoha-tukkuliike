@@ -1,0 +1,28 @@
+<div class="text-center">
+<h2>Open orders</h2>
+</div>
+<div style="container">
+<table class="table table-hover table-sm">
+  <thead class="thead-dark">
+  <tr class="d-flex">
+     <th class="col-2">Order ID</th>
+     <th class="col-5">Company name</th>
+     <th class="col-1">Route</th>
+     <th class="col-1">Total quantity</th>
+     <th class="col-3">Order date</th>
+    </tr>
+  </thead>
+{% for order in orders %}
+<tr class="d-flex" onclick="window.location='/collect_order/{{ order[0] }}';">
+  <td class="col-2">{{ order[0] }}</td>
+  <td class="col-5">{{ order[2] }}</td>
+  <td class="col-1">{{ order[5] }}</td>
+  <td class="col-1">{{ order[4] }}</td>
+  <td class="col-3">{{ order[3].strftime('%Y-%m-%d') }}</td>
+</tr>
+{% endfor %}
+</table>
+{% with current_page = session.sale, type = "sale", page_count_name = "sale", page_count = session.sale_page_count %}
+{% include "pagination.html" %}
+{% endwith %}
+</div>

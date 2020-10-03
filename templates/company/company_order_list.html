@@ -1,0 +1,23 @@
+<div class="text-center">
+<h2>Your orders</h2>
+</div>
+<div style="container-sm">
+<table class="table table-hover table-sm">
+  <thead>
+    <td>Order ID</td>
+    <td>Company name</td>
+    <td>Route</td>
+    <td>Total quantity</td>
+    <td>Order date</td>
+  </thead>
+{% for order in orders %}
+<tr onclick="window.location='/order_summary/{{ order[0] }}';">
+  <td>{{ order[0] }}</td>
+  <td>{{ order[2] }}</td>
+  <td>{{ order[5] }}</td>
+  <td>{{ order[4] }}</td>
+  <td>{{ order[3].strftime('%Y-%m-%d') }}</td>
+</tr>
+{% endfor %}
+</table>
+</div>

@@ -2,9 +2,10 @@
 {% block title %}Sales{% endblock %} 
 {% block header %}Sales view{% endblock %}
 {% block upper_content %}
-<p><a href="/inventory_view">List batches</a></p>
-<p><a href="/list_sale_orders">List sale orders</a></p>
-<p><a href="/create_company_user">Create company user</a></p>
-<p><a href="/place_company_order">Place company order</a></p>
+{% with main_view = true %}
+{% include "/sale/sale_layout.html" %}
+{% endwith %}
 {% endblock %}
-{% block back %}{% endblock %}
+{% block lower_content %}
+{% include "/logistic/logistic_list_inventory.html" %}
+{% endblock %}

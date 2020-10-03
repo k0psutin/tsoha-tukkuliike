@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block title %}Buyer{% endblock %}
+{% block header %}Buyer view{% endblock %}
+{% block upper_content %}
+{% with itemlist = true %}
+{% include "buyer/buyer_layout.html" %}
+{% endwith %}
+{% include "buyer/buyer_list_items.html" %}
+{% endblock %}
+{% block lower_content %}
+{% include "buyer/buyer_new_item_form.html" %}
+{% endblock %}
+
+

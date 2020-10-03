@@ -1,22 +1,34 @@
-{% extends "layout.html" %} 
-{% block title %}Sales{% endblock %} 
-{% block header %}Create new company user{% endblock %}
-{% block upper_content %} 
+<div class="text-center">
+<h2>Create new company user</h2>
+</div>
+<div class="d-flex justify-content-center align-items-center container">
+<div class="form-group">
 <form action="/create_new_company_user" method="POST">
+  <label for="companies">Company</label>
+  <select class="custom-select" id="company_id" name="company_id" required="true">
+    <option value ="">Choose company</option>
+    {% if company_id is undefined %}
+    {% set company_id = -1 %}
+    {% endif %}
+    {% for company in companies %}
+    
+    <option value="{{ company[0] }}" name="company_id" {% if (company[0]|int == company_id|int) %}selected {% endif %}>{{ company[1] }}</option>
+   
+    {% endfor %}
+  </select>
   <br>
-  Username:
-  <input type="text" value="" name="username" />
+  <label for="username">Username</label>
+  <input class="form-control"  required="true" type="text" value="{{ username }}" name="username" id="username" />
   <br>
-  Password:
-  <input type="password" value="" name="password" />
+  <label for="password">Password</label>
+  <input class="form-control" required="true"   type="password" value="" id="password" name="password" />
   <br>
-  Re-type password:
-  <input type="password" value="" name="password_check" />
+  <label for="password2">Re-type password</label>
+  <input class="form-control" required="true"   type="password" value="" name="password_check" id="password2"/>
   <br>
-  Company id:
-  <input type="number" value="" name="company_id" />
-  <br>
-  <input type="submit" value="Send" />
+
+  <button class="form-control"  type="submit" class="btn btn-sm">Create user</button>
   <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
 </form>
-{% endblock %}
+</div>
+</div>
