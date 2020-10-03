@@ -30,7 +30,11 @@ def create_user():
         print("Passwords doesn't match. Exiting.")
         quit()
 
-    create_user(username, password, 6)
+    error = create_user(username, password, 6)
+    if error == 0:
+        print("That username is taken.")
+        quit()
+
     print("User %s created succesfully." % username)
     print("Type 'flask run' to start the application. Exiting.")
     quit()
@@ -86,6 +90,7 @@ def create_user(username, password, auth_lvl, company_id=None):
     db.session.execute(
         sql, {"username": username, "pswd": hash_value, "auth_lvl": auth_lvl, "company_id": company_id})
     db.session.commit()
+    flash("User %s created succesfully" % username, "success")
 
 
 def get_user_id():  # TODO errormessages

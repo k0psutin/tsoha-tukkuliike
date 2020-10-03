@@ -29,7 +29,7 @@ def create_new_company_user():
         return render_template("sale/sale_create_company_user.html", username=username, company_id=company_id, companies=companies.get_all_companies())
     else:
         users.create_user(username, password, 1, company_id)
-    return redirect("/")
+    return redirect("/create_company_user")
 
 
 @app.route("/company_change_password", methods=["POST"])
