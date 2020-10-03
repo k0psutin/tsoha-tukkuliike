@@ -1,8 +1,0 @@
-{% for order in orders %}
-<p>
-  <a href="/collect_order/{{ order[0] }}"
-    >Order id: {{ order[0] }} - Company: {{ order[2] }} - Route: {{ order[5] }}
-    - Qty: {{ order[4] }} - Order date: {{ order[3].strftime('%Y-%m-%d') }}</a
-  >
-</p>
-{% endfor %}
