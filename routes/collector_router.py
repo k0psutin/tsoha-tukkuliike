@@ -27,8 +27,10 @@ def collect_batch():
     batch_nr = request.form["batch_nr"]
     qty = request.form["qty"]
 
-    logistics.collect_to_batchorder(order_id, qty, batch_nr)
-    return redirect("/collect_order/%s" % (order_id))
+    response = logistics.collect_to_batchorder(order_id, qty, batch_nr)
+    if response == True:
+        flash("Collected %spc(s) from %s" % (qty, batch_nr), "success")
+    return redirect("/collect_order/%s#form" % (order_id))
 
 
 @app.route("/collect_order/<string:order_id>")

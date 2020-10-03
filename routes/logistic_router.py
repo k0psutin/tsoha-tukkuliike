@@ -46,6 +46,9 @@ def update_batch():
     qty = request.form["qty"]
 
     logistics.update_batch_qty(batchnr, qty)
+    if security.has_auth([6]):
+        return redirect("/controller_batches")
+
     return redirect("/batch_inventory#form")
 
 
@@ -58,4 +61,7 @@ def update_supply_order():
     qty = request.form["qty"]
 
     logistics.update_supply_order_qty(order_id, qty)
+    if security.has_auth([6]):
+        return redirect("/controller_supply_orders")
+
     return redirect("/supply_order_inventory#form")
