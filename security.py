@@ -16,3 +16,7 @@ def has_csrf_token(csrf_token):
 def has_role(auth_levels):
     if session["auth_lvl"] not in auth_levels:
         abort(403)
+
+
+def has_auth(auth_levels):
+    return session["auth_lvl"] in auth_levels
