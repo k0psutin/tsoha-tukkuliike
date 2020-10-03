@@ -46,7 +46,7 @@ def controller_list_items():
 @app.route("/controller_list_sale_orders")
 def controller_list_sale_orders():
     security.has_role([6])
-    return render_template("controller/controller_list_sale_orders.html", orders=orders.get_all_sale_orders())
+    return render_template("controller/controller_list_sale_orders.html", page_count=pagetools.sales_page_count(), orders=orders.get_all_sale_orders())
 
 
 @app.route("/controller_create_new_user")
