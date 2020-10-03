@@ -1,0 +1,8 @@
+{% extends "layout.html" %} 
+{% block title %}Sales{% endblock %} 
+{% block upper_content %}
+{% with company_order = true %}
+{% include "/sale/sale_layout.html" %}
+{% endwith %}
+{% include "sale/sale_order_form.html" %}
+{% endblock %}
