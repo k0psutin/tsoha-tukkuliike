@@ -11,3 +11,6 @@ import routes.sales_router
 import routes.buyer_router
 import routes.user_router
 import routes.controller_router
+import routes.company_router
+import routes.cart_router
+import routes.page_router
