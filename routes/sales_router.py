@@ -71,9 +71,13 @@ def remove_item_From_sale_order():
     item_id = request.form["item_id"]
     order_id = request.form["order_id"]
 
-    orders.remove_item_from_sale_order(item_id, order_id)
+    order_deleted = orders.remove_item_from_sale_order(item_id, order_id)
     removed_item = item.get_item_by_id(item_id)
-    flash("%s removed from order" % removed_item[1], "successs")
+    if order_deleted:
+        flash("Last item removed from order %s" % (order_id), "warning")
+        return redirect("/list_orders")
+
+    flash("%s removed from order" % removed_item[1], "success")
     return redirect("/modify_order/%s" % order_id)
 
 

@@ -100,6 +100,16 @@ def remove_item_from_sale_order(item_id, order_id):
     db.session.execute(sql, {"item_id": item_id, "order_id": order_id})
     db.session.commit()
 
+    sql = "SELECT COUNT(*) FROM orders WHERE order_id = :order_id"
+    result = db.session.execute(sql, {"order_id": order_id})
+    count = result.fetchone()[0]
+    print(count)
+    if count == None or count == 0:
+        delete_order_by_order_id(order_id)
+        return True
+
+    return False
+
 
 def add_item_to_sale_order(order_id, company_id, item_id, qty):
     sql = "SELECT qty FROM orders WHERE order_id = :order_id AND item_id = :item_id AND company_id = :company_id"

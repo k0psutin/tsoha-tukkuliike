@@ -25,7 +25,7 @@ def batch_page_count():
 
 
 def sales_page_count():
-    page_count = orders.get_all_sale_order_page_count(True)
+    page_count = orders.get_all_sale_order_page_count(False)
     if page_count == None:
         page_count = 0
     else:
@@ -34,7 +34,7 @@ def sales_page_count():
 
 
 def open_order_page_count():
-    page_count = orders.get_all_sale_order_page_count(False)
+    page_count = orders.get_all_sale_order_page_count(True)
     if page_count == None:
         page_count = 0
     else:

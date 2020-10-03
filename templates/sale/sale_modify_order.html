@@ -74,7 +74,7 @@
     						</thead>
     						<tbody>
                 {% for item in order %}
-                <form action="/remove_item_from_sale_order" onsubmit="return confirm('Remove {{ item_name }} from order?'">
+                <form action="/remove_item_from_sale_order" onsubmit="return confirmDeleteItem('{{ item[1] }}')" method="POST">
                 <tr>
     								<td><button class="btn" type="submit">Delete</button> {{ item[1] }}</td>
     								<td class="text-center">{{ item[5] }}</td>
