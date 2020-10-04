@@ -51,7 +51,7 @@ def place_order():
 @app.route("/list_orders")
 def list_sale_orders():
     security.has_role([4, 6])
-    return render_template("sale/sale_list_orders.html", page_count=pagetools.open_order_page_count(), orders=orders.get_all_sale_orders(True))
+    return render_template("sale/sale_list_orders.html", page_count=pagetools.sales_page_count(), orders=orders.get_all_sale_orders(False))
 
 
 @app.route("/update_sale_order", methods=["POST"])
@@ -123,6 +123,7 @@ def modify_order(order_id):
 
     return render_template("sale/sale_modify_order.html",
                            order_id=order_id,
+                           order_date=orders.get_order_date(order_id)[0],
                            total=orders.get_order_total(order_id),
                            company=orders.get_company_by_order_id(order_id),
                            order=orders.get_sale_order(order_id))
