@@ -19,6 +19,10 @@ function addToCart(sales = false) {
       error = true
     }
   }
+  if (Number(qty) === qty || qty % 1 !== 0) {
+    $('#qtyHelp').text('Quantity must be an integer')
+    error = true
+  }
   if (qty == '' || qty < 1) {
     $('#qtyHelp').text('Quantity must be non-empty and higher than zero')
     error = true
