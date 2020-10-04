@@ -29,14 +29,17 @@ Myös asiakas voi tilata suoraan tukusta omilla tunnuksillaan.
 Varasto:  
 [x] Pystyy siirtämään saapuvia tuotteita tukun varastoon  
 [x] Virtuaalinäkymä saapuvista tuotteista  
+[x] Saapuvien tuotteiden inventointi  
 [x] Varaston inventointi  
 <br>
 Myynti:  
 [x] Pystyy luomaan ostotilauksia  
-[x] Näkee avoimet/suljetut asiakkaiden tilaukset  
-[x] Näkee varastossa olevat tuotteet
-[x] Pystyy luomaan tunnuksia asiakkaille
-[x] Voi muokata myyntitilauksia
+[x] Näkee kaikki tilaukset  
+[x] Näkee varastossa olevat tuotteet  
+[x] Pystyy luomaan uusia yrityksiä tietokantaan  
+[x] Pystyy luomaan tunnuksia asiakkaille  
+[x] Voi muokata myyntitilauksia (toistaiseksi vain tilauksen poisto ja/tai tuotteen poisto)  
+[ ] Näkee tilastoja tilauksista annetulta ajalta
 
 <br>
 
@@ -44,7 +47,7 @@ Osto:
 [x] Pystyy luomaan uusia tuotteita  
 [x] Pystyy näkemään saapuvat tuotteet, sekä varaston tuotteet  
 [x] Pystyy tekemään tilauksia tuotteille  
-[x] Pystyy lisäämään uusia tuotteita
+[x] Pystyy lisäämään uusia tuotteita  
 [ ] Näkee yhteenvedon saapuvista sekä varaston tuotteista annetulta ajalta
 
 <br>
@@ -59,13 +62,14 @@ Keräily:
 Kontrolleri:  
 [x] Pääsee joka osa-alueelle  
 [x] Voi luoda käyttäjiä
-[x] Voi muokata myyntitilauksia, varastosaldoja, tuotetilauksia  
+[x] Voi muokata varastosaldoja, saapuvien tuotteiden saldoja  
 [ ] Näkee yhteenvetoja myynneistä, ostoista jne.
 
 <br>
 
 Asiakas:  
 [x] Voi luoda ostotilauksen  
+[x] Voi vaihtaa salasanansa  
 [x] Saa myyntivahvistuksen tilauksen jättämisen jälkeen.
 
 <br>
@@ -78,21 +82,20 @@ Sovellus:
 [x] Tietokanta osio  
 [x] Käyttöohjeet  
 [ ] Asennusohje  
-[ ] Käyttötapaukset  
 [ ] Englanninkielinen versio
 
 ### Sovelluksen vaiheet
 
 [x] Runko valmiiksi  
-[ ] Syötteiden validointi  
-[ ] Varmistusikkuna mm. tilaamiseen.  
-[ ] Ulkoasu kuntoon
+[x] Syötteiden validointi  
+[x] Varmistusikkuna mm. tilaamiseen.  
+[x] Ulkoasu kuntoon
 
 ### Suunniteltuja toimintoja
 
+[ ] Graafisia esityksiä myynneistä yms.  
 [ ] Transaktioloki varastosiirroille  
-[ ] Roolien eriytys omaksi taulukseen
-
+[ ] Roolien eriytys omaksi taulukseen  
 <br>
 
 ### Sovelluksen osoite:
@@ -108,21 +111,21 @@ Logistiikka: `varasto/1234`
 Keräily: `keraily/1234`  
 Osto: `osto/1234`  
 Myynti: `myynti/1234`  
-Kontrolleri: `admin/1234`  
+Kontrolleri: `kontrolleri/1234`  
 Asiakas: `asiakas/1234`
 
 <br>
 
 ### Käyttäjätasot
 
-| Taso | Rooli            |
-| :--: | ---------------- |
-|  1   | asiakas          |
-|  2   | varasto          |
-|  3   | keräily          |
-|  4   | myynti           |
-|  5   | osto             |
-|  6   | kontroller/admin |
+| Taso | Rooli       |
+| :--: | ----------- |
+|  1   | asiakas     |
+|  2   | varasto     |
+|  3   | keräily     |
+|  4   | myynti      |
+|  5   | osto        |
+|  6   | kontrolleri |
 
 <br>
 
@@ -132,5 +135,4 @@ Asiakas: `asiakas/1234`
 
 [Tietokanta](/doc/db.md)  
 [Käyttöohjeet](/doc/kayttoohje.md)  
-Asennusohje  
-Käyttötapaukset
+Asennusohje
