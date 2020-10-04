@@ -7,7 +7,7 @@
       <input class ="form-control" type="text" required="true" name="order_id" id="orderId">
       <br />
       <label for="qty">Quantity</label>
-      <input class ="form-control" type="text" required="true" name="qty" id="qty">
+      <input class ="form-control" type="number" min="0" required="true" name="qty" id="qty">
       <br />
       <input class ="form-control" id="form" type="submit" value="Send">
       <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />

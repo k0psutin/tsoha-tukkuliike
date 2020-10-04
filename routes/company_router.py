@@ -8,6 +8,25 @@ import db_interfaces.companies as companies
 import security
 
 
+@app.route("/create_new_company", methods=["POST"])
+def create_new_company():
+    security.has_csrf_token(session["csrf_token"])
+    security.has_auth([4, 6])
+    compname = request.form["compname"]
+    address = request.form["address"]
+    email = request.form["email"]
+    country = request.form["country"]
+    route = request.form["route"]
+
+    success = companies.create_company(
+        compname, address, email, country, route)
+
+    if success == False:
+        return render_template("/sale/sale_create_company.html", compname=compname, address=address, route=route, email=email, country=country)
+    else:
+        return redirect("/create_company")
+
+
 @app.route("/create_new_company_user", methods=["POST"])
 def create_new_company_user():
     security.has_role([4, 6])

@@ -20,7 +20,7 @@ def get_all_batches():
     sql = """SELECT batch_nr, items.itemname, batches.qty, date
              FROM batches
              INNER JOIN items ON (batches.item_id = items.item_id)
-             WHERE qty > 0 LIMIT :row_count OFFSET :offset"""
+             WHERE qty > 0 ORDER BY date LIMIT :row_count OFFSET :offset"""
 
     result = db.session.execute(
         sql, {"row_count": row_count, "offset": offset})
@@ -39,7 +39,7 @@ def check_if_batch_exists(batch_nr):
     return result.fetchone() != None
 
 
-def update_supply_order_qty(order_id, new_qty):
+def update_supply_order_qty(order_id, new_qty, show=True):
     order = get_supply_order_by_id(order_id)
 
     if order == None:
@@ -55,7 +55,8 @@ def update_supply_order_qty(order_id, new_qty):
         sql, {"updated_qty": new_qty, "order_id": order_id})
 
     db.session.commit()
-    flash("Supply order %s quantity updated" % order_id, "success")
+    if show:
+        flash("Supply order %s quantity updated" % order_id, "success")
     return
 
 
@@ -125,7 +126,7 @@ def create_new_batch(order_id, qty):
             updated_qty = 0
 
         add_batch_qty(batch_nr, qty)
-        update_supply_order_qty(order_id, updated_qty)
+        update_supply_order_qty(order_id, updated_qty, False)
         flash("Batch %s updated succesfully" % batch_nr, "success")
         return False
 
@@ -133,7 +134,7 @@ def create_new_batch(order_id, qty):
     updated_qty = order_qty - qty
 
     if updated_qty < 0:
-        flash("Transfererd quantity exceeds order quantity", "danger")
+        flash("Transferred quantity exceeds order quantity", "danger")
         return False
 
     user_id = users.get_user_id()

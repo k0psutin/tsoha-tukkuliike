@@ -15,6 +15,12 @@ def create_company_user():
     return render_template("sale/sale_create_company_user.html", companies=companies.get_all_companies())
 
 
+@app.route("/create_company")
+def create_company():
+    security.has_role([4, 6])
+    return render_template("sale/sale_create_company.html")
+
+
 @app.route("/place_order", methods=["POST"])
 def place_order():
     security.has_role([1, 4, 6])

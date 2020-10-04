@@ -1,0 +1,33 @@
+<div class="text-center">
+<h2>Create new company</h2>
+</div>
+<div class="d-flex justify-content-center align-items-center container">
+<div style="width:50%;" class="form-group">
+<form action="/create_new_company" method="POST">
+  <label for="compname">Company name</label>
+  <div class="input-group mb-3">
+  <input placeholder="Example Company AB" class="form-control" value="{{ compname }}" required="true" type="text" name="compname" id="compname" />
+  </div>
+  <label for="email">Email</label>
+   <div class="input-group mb-3">
+  <input placeholder="example@company.com"  class="form-control" value="{{ email }}" required="true"   type="email" value="" id="email" name="email" />
+  </div>
+  <label for="address">Address</label>
+   <div class="input-group mb-3">
+  <input placeholder="Example valley 123" class="form-control"  value="{{ address }}" required="true"   type="text" value="" name="address" id="address"/>
+  </div>
+  <label for="country">Country</label>
+   <div class="input-group mb-3">
+  <input placeholder="USA" class="form-control" required="true"  value="{{ country }}"   type="text" value="" name="country" id="country"/>
+  </div>
+  <label for="route">Route</label>
+   <div class="input-group mb-3">
+  <input placeholder="66"  class="form-control" required="true"   type="number" min="0" value="" name="route" id="route"/>
+  </div>
+   <div class="input-group mb-3">
+  <button class="form-control"  type="submit" class="btn btn-sm">Create company</button>
+  </div>
+  <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+</form>
+</div>
+</div>
