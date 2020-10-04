@@ -40,7 +40,8 @@ def order_detail(order_id):
 @app.route("/controller_list_items")
 def controller_list_items():
     security.has_role([6])
-    return render_template("controller/controller_list_items.html", page_count=item.item_page_count(), items=item.get_all_items())
+    page_count = pagetools.item_page_count()
+    return render_template("controller/controller_list_items.html", page_count=page_count, items=item.get_all_items())
 
 
 @app.route("/controller_list_sale_orders")
