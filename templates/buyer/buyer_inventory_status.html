@@ -1,0 +1,13 @@
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% extends "layout.html" %}
+{% block title %}Buyer{% endblock %}
+{% block header %}Buyer view{% endblock %}
+{% block upper_content %}
+{% with inventory_status = true %}
+{% include "buyer/buyer_layout.html" %}
+{% endwith %}
+{% endblock %}
+{% block lower_content %}
+{% include "buyer/buyer_inventory_graph.html" %}
+{% endblock %}

@@ -1,0 +1,10 @@
+<script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+{% extends "layout.html" %} 
+{% block title %}Controller{% endblock %} 
+{% block upper_content %}
+{% include "controller/controller_layout.html" %}
+{% endblock %}
+{% block lower_content %} 
+{% include "sale/sale_report_graph.html" %}
+{% endblock %}

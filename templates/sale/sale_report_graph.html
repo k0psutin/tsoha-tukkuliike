@@ -1,0 +1,23 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-4 mx-auto">
+      <div class="form-group">
+        <label for="example-date-input">Year</label>
+        <input id="csrf_token" type="hidden" value="{{ session.csrf_token }}" />
+        <select class="form-control" id="yearlist">
+          <option value="None" selected>Select year</option>
+        </select>
+      </div>
+    </div>
+  </div>
+</div>
+<br />
+<div class="container">
+  <div class="row">
+    <div id="statistics" class="col-md-10 mx-auto"></div>
+    <div class="col-md-12 mx-auto">
+      <div id="chartDiv" class="text-center"></div>
+    </div>
+  </div>
+</div>
+<script src="{{url_for('static', filename='js/saleReport.js')}}"></script>

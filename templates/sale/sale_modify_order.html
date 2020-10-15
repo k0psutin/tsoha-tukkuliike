@@ -14,6 +14,7 @@
           <h3 class="text-right" style="display: inline-block;">Order # {{ order_id }} <button class="btn" type="submit">Delete</button>
           <input type="hidden" value="{{ order_id }}" name="order_id" />
           <input type="hidden" value="{{ session.csrf_token }}" name="csrf_token" />
+		  <input type="hidden" id="company_id" value="{{ company[4] }}" name="company_id"/>
           </form>
           </h3>
         <hr>
@@ -73,19 +74,27 @@
                                 </tr>
     						</thead>
     						<tbody>
+			
                 {% for item in order %}
                 <form action="/remove_item_from_sale_order" onsubmit="return confirmDeleteItem('{{ item[1] }}')" method="POST">
+				<input type="hidden" id="order_id" name="order_id" value="{{ order_id }}" />
+                <input type="hidden" id="csrf_token" name="csrf_token" value="{{ session.csrf_token }}" />
                 <tr>
     								<td><button class="btn" type="submit">Delete</button> {{ item[1] }}</td>
     								<td class="text-center">{{ item[5] }}</td>
-    								<td class="text-center">{{ item[2] }}</td>
+    								<td class="text-center"><a style="cursor: pointer;" type="button" onclick="updateOrderItemQty('{{ item[0] }}')">{{ item[2] }}</a></td>
     								<td class="text-right">{{ (item[5] * item[2]) }}</td>
     							</tr>
-                <input type="hidden" name="order_id" value="{{ order_id }}" />
                 <input type="hidden" name="item_id" value="{{ item[0] }}" />
-                <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}" />
+			
                 </form>
                 {% endfor %}
+				<tr>
+    				<td></td>
+    				<td class="text-center"><button class="btn" data-toggle="modal" data-target="#addItem">Add new item</button></td>
+    				<td class="text-center"></td>
+    				<td class="text-right"></td>
+    			</tr>
     							<tr style="border-top: none; border-bottom: none; border-top: 2px solid;">
     								<td class="no-line"></td>
     								<td class="no-line"></td>
@@ -99,6 +108,50 @@
     		</div>
     	</div>
     </div>
-    <input type="button" class="form-control" value="Back" onclick=window.history.back()>
+	<input type="button" class="form-control" value="Back" onclick=window.history.back()>
+	</div>
+	<!-- Modal start -->
+    <!-- Modal -->
+	<div id="addItem" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+    <!-- Modal content-->
+    <div class="modal-content">
+      <div class="modal-header">
+       <h4 class="modal-title">Add item to order</h4>
+        <button id="closeCart" type="button" class="close" data-dismiss="modal">&times;</button>
+      </div>
+      <div id="modalBody" class="modal-body">
+	  <form onsubmit="return confirmAddItem()" method="POST" action="/add_item_to_order">
+        <div class="form-group">
+        <label for="item">Item</label>
+          <select aria-describedby="itemHelp" class="custom-select" id="items" name="item_id" required="true">
+            <option value ="">Choose item</option>
+            {% for item in items %} 
+            <option value="{{ item[0] }}" id="item_id">{{ item[1] }}</option>
+           {% endfor %}
+           {% for item in items %}
+		 
+          {% endfor %}
+        </select>
+		<small class="text-danger" id="itemHelp" class="form-text text-muted"></small>
+		<label for="price">Price</label>
+        <input class="form-control" required="true" id="price" type="number" min="0" step="0.01" name="price" value="" />
+		<small class="text-danger" id="priceHelp" class="form-text text-muted"></small>
+		<label for="price">Quantity</label>
+        <input class="form-control" required="true" id="qty" type="number" min="0" name="qty" value="" />
+		<small class="text-danger" id="qtyHelp" class="form-text text-muted"></small>
+      </div>
+      </div>
+      <div class="modal-footer justify-content-between">
+          <button id="closeCart" type="button" class="btn mr-auto" data-dismiss="modal">Close</button>
+          <button class="btn" type="submit">Add item</button>
+		  	<input type="hidden" value="{{ order_id }}" name="order_id" />
+        <input type="hidden" value="{{ session.csrf_token }}" name="csrf_token" />
+		<input type="hidden" id="company_id" value="{{ company[4] }}" name="company_id"/>
+	 </form> 
+      </div>
+    </div>
+
+  </div>
 </div>
 {% endblock %}
