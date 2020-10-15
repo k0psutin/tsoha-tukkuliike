@@ -36,10 +36,21 @@ def login():
 
 @app.route("/create_new_user_form")
 def create_user_form():
-    if session["auth_lvl"] != 6:
-        abort(403)
+    security.has_role([6])
 
     return render_template("user/create_new_user_form.html")
+
+
+@app.route("/change_user_password", methods=["POST"])
+def change_user_password():
+    security.has_role([6])
+    security.has_csrf_token(request.form["csrf_token"])
+    username = request.form["username"]
+    old_password = request.form["old_password"]
+    new_password = request.form["new_password"]
+    validate = request.form["validate"]
+    users.change_password(old_password, validate, new_password, username)
+    return render_template("controller/controller_change_user_password.html", users=users.get_all_users())
 
 
 @app.route("/create_new_user", methods=["POST"])
@@ -49,24 +60,11 @@ def create_new_user():
 
     username = request.form["username"]
     password = request.form["password"]
-    password_check = request.form["password_check"]
+    validate = request.form["password_check"]
     auth_lvl = request.form["auth_lvl"]
 
-    if auth_lvl == 'None' or auth_lvl == 0:
-        flash("Enter authorization level (1-6")
+    success = users.create_user(username, password, validate, auth_lvl)
+    if success == False:
         return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
 
-    if len(username) < 4:
-        flash("Username must be at least 4 characters long.", "danger")
-        return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
-
-    if len(password) < 4:
-        flash("Password must be at least 4 characters long.", "danger")
-        return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
-
-    if password != password_check:
-        flash("Passwords doesn't match.", "danger")
-        return render_template("controller/controller_create_new_user.html", auth_lvl=auth_lvl, username=username)
-    else:
-        users.create_user(username, password, auth_lvl)
     return redirect("/controller_create_new_user")

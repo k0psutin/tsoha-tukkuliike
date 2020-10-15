@@ -5,6 +5,7 @@ import db_interfaces.users as users
 import db_interfaces.item as item
 import db_interfaces.orders as orders
 import db_interfaces.companies as companies
+import db_interfaces.logistics as logistics
 import security
 import pagetools
 
@@ -45,10 +46,16 @@ def add_new_item():
     return redirect("/items#form")
 
 
+@app.route("/inventory_status")
+def inventory_status():
+    security.has_role([5, 6])
+    return render_template("buyer/buyer_inventory_status.html")
+
+
 @app.route("/supply_order_form")
 def supply_order_form():
     security.has_role([5, 6])
-    return render_template("buyer/buyer_supply_order.html", companies=companies.get_all_companies(), items=item.get_all_items())
+    return render_template("buyer/buyer_supply_order.html", companies=companies.get_all_companies(), items=item.get_all_items(False))
 
 
 @app.route("/place_supply_order", methods=["POST"])
@@ -69,3 +76,11 @@ def place_supply_order():
     orders.create_supply_order(
         company_id_list, item_list, qty_list, price_list, user_id)
     return redirect("/supply_order_form")
+
+
+@app.route("/inventory_report", methods=["POST"])
+def inventory_report():
+    security.has_role([5, 6])
+    security.has_csrf_token(request.form["csrf_token"])
+
+    return logistics.inventory_data()

@@ -49,11 +49,15 @@ def get_price(item_id):
     return result.fetchone()[0]
 
 
-def get_all_items():
+def get_all_items(pagination=True):
     row_count = session["row_count"]
     offset = session["item"] * 10
-    result = db.session.execute(
-        "SELECT * FROM items LIMIT :row_count OFFSET :offset", {"row_count": row_count, "offset": offset})
+    if pagination:
+        result = db.session.execute(
+            "SELECT * FROM items LIMIT :row_count OFFSET :offset", {"row_count": row_count, "offset": offset})
+    else:
+        result = db.session.execute(
+            "SELECT * FROM items")
     return result.fetchall()
 
 

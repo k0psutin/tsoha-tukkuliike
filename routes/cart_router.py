@@ -1,5 +1,5 @@
 from app import app
-from flask import request, session, jsonify, flash, redirect
+from flask import request, session, jsonify, flash
 
 import db_interfaces.users as users
 import db_interfaces.orders as orders
@@ -56,38 +56,17 @@ def add_item_to_cart():
     security.has_role([1, 4, 5, 6])
 
     item = None
-    company_id = None
 
     if session["auth_lvl"] == 1:
         company_id = users.get_company_id()
-
-    if session["auth_lvl"] == 5 or session["auth_lvl"] == 6:
+    else:
         company_id = request.form["company_id"]
-        if company_id == None or company_id == '':
-            flash("Select a company", "danger")
-            return "OK"
 
     item_name = request.form["item_name"]
     item_id = request.form["item_id"]
     qty = request.form["qty"]
     price = request.form["price"]
     user_id = users.get_user_id()
-
-    if item_name == None or item_name == '':
-        flash("Select an item", "danger")
-        return "OK"
-
-    if item_id == None or item_id == '':
-        flash("Item id is missing", "danger")
-        return "OK"
-
-    if qty == None or qty == '' or int(qty) == 0 or int(qty) < 0:
-        flash("Quantity must be non-empty and more than zero", "danger")
-        return "OK"
-
-    if price == None or price == '' or float(price) == 0 or float(price) < 0:
-        flash("Price must be non-empty and more than zero", "danger")
-        return "OK"
 
     cart = list(session["cart"])
     if session["auth_lvl"] == 6 or session["auth_lvl"] == 5 or session["auth_lvl"] == 1:
@@ -139,7 +118,7 @@ def finalize_order():
 
     for i in range(len(cart)):
         order = None
-        if session["auth_lvl"] == 4:
+        if security.has_auth([4]):
             order = {'order_id': order_id,
                      'company_id': company_id,
                      'item_id': cart[i]["item_id"],
@@ -147,7 +126,7 @@ def finalize_order():
                      'user_id': user_id,
                      'price': cart[i]["price"]}
 
-        if session["auth_lvl"] == 6 or session["auth_lvl"] == 5 or session["auth_lvl"] == 1:
+        if security.has_auth([1, 5, 6]):
             order = {'order_id': order_id,
                      'company_id': cart[i]["company_id"],
                      'item_id': cart[i]["item_id"],
@@ -158,11 +137,11 @@ def finalize_order():
 
     session["cart"] = []
 
-    if session["auth_lvl"] == 5 or session["auth_lvl"] == 6:
+    if security.has_auth([5, 6]):
         orders.create_supply_order(orderList)
         flash("Order was successful", "success")
         return order_id
-    if session["auth_lvl"] == 4 or session["auth_lvl"] == 1:
+    if security.has_auth([1, 4]):
         success = orders.create_sale_order(order_id, orderList)
         if success:
             return order_id

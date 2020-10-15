@@ -66,7 +66,7 @@ def change_password():
 @app.route("/company_info")
 def company_info():
     user = users.get_current_user()
-    company_id = user[4]
+    company_id = user[1]
     return render_template("company/company_info.html", user=user, company=companies.get_company(company_id))
 
 

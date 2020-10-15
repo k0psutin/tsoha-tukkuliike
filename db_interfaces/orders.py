@@ -1,5 +1,5 @@
 from flask.helpers import flash
-from flask import session
+from flask import session, jsonify
 from db_interfaces.db import db
 import db_interfaces.item as item
 import db_interfaces.users as users
@@ -111,6 +111,12 @@ def remove_item_from_sale_order(item_id, order_id):
 
 
 def add_item_to_sale_order(order_id, company_id, item_id, qty):
+    added_item = item.get_item_by_id(item_id)
+
+    if added_item == None:
+        flash("Invalid item_id", "danger")
+        return
+
     sql = "SELECT qty FROM orders WHERE order_id = :order_id AND item_id = :item_id AND company_id = :company_id"
     result = db.session.execute(
         sql, {"order_id": order_id, "item_id": item_id, "company_id": company_id})
@@ -133,37 +139,13 @@ def add_item_to_sale_order(order_id, company_id, item_id, qty):
         sql, {"order_id": order_id, "company_id": company_id, "item_id": item_id, "qty": qty, "price": price, "user_id": user_id})
     db.session.commit()
 
+    flash("%s added to order" % added_item[1], "success")
 
-def update_sale_order_item_qty(order_id, item_list, company_id, qty_list):
-    sql = "UPDATE orders SET price = :price, qty = :qty WHERE company_id = :company_id AND item_id = :item_id AND order_id = :order_id"
 
-    inserts = []
-
-    for i in range(len(qty_list)):
-
-        if qty_list[i] == '':
-            continue
-
-        if qty_list[i] == '0':
-            remove_item_from_sale_order(item_list[i], order_id)
-            continue
-
-        else:
-            price = round(float(item.get_price(
-                item_list[i])) * float(qty_list[i]), 2)
-
-            insert = {"order_id": order_id,
-                      "company_id": company_id,
-                      "item_id": item_list[i],
-                      "qty": qty_list[i],
-                      "price": price}
-
-            inserts.append(insert)
-
-    if len(inserts) == 0:
-        return
-
-    db.session.execute(sql, inserts)
+def update_sale_order_item_qty(order_id, item_id, company_id, qty):
+    sql = "UPDATE orders SET qty = :qty WHERE company_id = :company_id AND item_id = :item_id AND order_id = :order_id"
+    db.session.execute(sql, {
+                       "order_id": order_id, "item_id": item_id, "company_id": company_id, "qty": qty})
     db.session.commit()
 
 
@@ -244,6 +226,40 @@ def create_supply_order(orderList):
 
     db.session.execute(sql, orderList)
     db.session.commit()
+
+
+def get_sales_by_year(year):
+    sql = """SELECT EXTRACT(MONTH FROM orderdate) AS month,
+                    SUM(orders.qty*orders.price) AS sum
+             FROM orders 
+             JOIN items ON (orders.item_id = items.item_id) 
+             WHERE supply = FALSE AND 
+             EXTRACT(YEAR FROM orderdate) = :year 
+             GROUP BY month ORDER BY month;"""
+
+    result = db.session.execute(sql, {"year": year})
+    res = result.fetchall()
+
+    data = {}
+    x = [0]*13
+    total = 0
+
+    for i in range(12):
+        x[i] = 0
+
+    for i in range(len(res)):
+        x[int(res[i][0] - 1)] = str(res[i][1])
+        total += res[i][1]
+
+    data["x"] = x
+    data["empty"] = (len(res) == 0)
+    data["total"] = str(total)
+
+    if len(res) == 0:
+        return jsonify(data)
+
+    data["average"] = str(round(total/12, 2))
+    return jsonify(data)
 
 
 def delete_order_by_order_id(order_id):

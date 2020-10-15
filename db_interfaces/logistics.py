@@ -1,5 +1,5 @@
 from flask.helpers import flash
-from flask import session
+from flask import session, jsonify
 from datetime import date
 from db_interfaces.db import db
 from db_interfaces.item import get_itemid_by_batchnr
@@ -42,6 +42,10 @@ def check_if_batch_exists(batch_nr):
 def update_supply_order_qty(order_id, new_qty, show=True):
     order = get_supply_order_by_id(order_id)
 
+    if type(new_qty) != int:
+        flash("Enter a valid integer", "danger")
+        return
+
     if order == None:
         flash("Invalid order id", "danger")
         return
@@ -61,6 +65,11 @@ def update_supply_order_qty(order_id, new_qty, show=True):
 
 
 def update_batch_qty(batchnr, new_qty):
+
+    if type(new_qty) != int:
+        flash("Invalid quantity", "danger")
+        return
+
     new_qty = int(new_qty)
     if check_if_batch_exists(batchnr) == False:
         flash("Invalid batch number", "danger")
@@ -97,6 +106,10 @@ def get_supply_order_by_id(order_id):
 
 
 def create_new_batch(order_id, qty):
+
+    if "e" in qty:
+        flash("Invalid quantity", "danger")
+        return
 
     qty = int(qty)
     if qty <= 0:
@@ -138,11 +151,11 @@ def create_new_batch(order_id, qty):
         return False
 
     user_id = users.get_user_id()
-    sql2 = """INSERT INTO batches (batch_nr, company_id, item_id, qty, date, user_id)
-             VALUES (:batch_nr, :company_id, :item_id, :qty, :now, :user_id)"""
+    sql2 = """INSERT INTO batches (batch_nr, order_id, item_id, qty, date, user_id)
+             VALUES (:batch_nr, :order_id, :item_id, :qty, :now, :user_id)"""
 
     db.session.execute(sql2, {
-                       "batch_nr": batch_nr, "company_id": order[0], "item_id": order[1], "qty": qty, "now": order[5], "user_id": user_id})
+                       "batch_nr": batch_nr, "order_id": order_id, "item_id": order[1], "qty": qty, "now": order[5], "user_id": user_id})
 
     sql3 = "UPDATE orders SET qty = :updated_qty WHERE order_id = :order_id"
     db.session.execute(
@@ -206,6 +219,10 @@ def get_item_qty_from_order(item_id, order_id, batch_nr):
 
 
 def collect_to_batchorder(order_id, qty, batch_nr):
+    if "e" in qty:
+        flash("Invalid quantity", "danger")
+        return False
+
     qty = int(qty)
 
     if qty <= 0 or qty == '':
@@ -216,7 +233,7 @@ def collect_to_batchorder(order_id, qty, batch_nr):
                     orders.item_id
              FROM batches
              INNER JOIN orders ON (batches.item_id = orders.item_id)
-             WHERE batch_nr = :batch_nr and order_id = :order_id"""
+             WHERE batches.batch_nr = :batch_nr and orders.order_id = :order_id"""
 
     result = db.session.execute(
         sql, {"order_id": order_id, "batch_nr": batch_nr})
@@ -251,9 +268,6 @@ def collect_to_batchorder(order_id, qty, batch_nr):
         return True
 
     else:
-        print("Remaining qty: ", amount[2])
-        print("Batchorder qty: ", amount[1])
-        print("Collected qty: ", qty)
         if qty > int(amount[2]):
             flash("Collected qty exceed order qty", "danger")
             return False
@@ -292,3 +306,59 @@ def create_new_shipment(order_id):
     db.session.commit()
     flash("Order %s completed" % order_id, "success")
     return True
+
+
+def inventory_data():
+    sql = """SELECT items, 
+                    COALESCE(sum(qty),0) 
+             FROM ((SELECT items.itemname AS items, qty 
+                           FROM orders 
+                           FULL JOIN items ON (orders.item_id = items.item_id) 
+                           WHERE supply = true)
+                    UNION ALL
+                    (SELECT items.itemname AS items, qty 
+                            FROM batches 
+                            FULL JOIN items on (items.item_id = batches.item_id))) q
+             GROUP BY items 
+             ORDER BY items;"""
+
+    result = db.session.execute(sql)
+    supply = result.fetchall()
+
+    data = {}
+
+    data["supply"] = (len(supply) != 0)
+
+    supplyX = [0]*len(supply)
+    supplyY = [0]*len(supply)
+
+    for i in range(len(supply)):
+        supplyX[i] = supply[i][0]
+        supplyY[i] = supply[i][1]
+
+    data["supplyX"] = supplyX
+    data["supplyY"] = supplyY
+
+    sql = """SELECT items.itemname, sum(orders.qty) 
+             FROM orders 
+             FULL JOIN items ON (orders.item_id = items.item_id) 
+             WHERE supply = false 
+             GROUP BY items.itemname 
+             ORDER BY itemname;"""
+
+    result = db.session.execute(sql)
+    sale = result.fetchall()
+
+    saleX = [0]*len(sale)
+    saleY = [0]*len(sale)
+
+    data["sale"] = (len(sale) != 0)
+
+    for i in range(len(sale)):
+        saleX[i] = sale[i][0]
+        saleY[i] = sale[i][1]
+
+    data["saleX"] = saleX
+    data["saleY"] = saleY
+
+    return jsonify(data)

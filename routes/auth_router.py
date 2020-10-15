@@ -55,4 +55,4 @@ def buyer():
 
 
 def controller():
-    return render_template("controller/controller.html")
+    return redirect("/controller_batches")

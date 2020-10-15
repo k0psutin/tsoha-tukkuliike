@@ -4,6 +4,7 @@ import db_interfaces.orders as orders
 import db_interfaces.logistics as logistics
 import db_interfaces.item as item
 import db_interfaces.companies as companies
+import db_interfaces.users as users
 import security
 import pagetools
 
@@ -23,7 +24,7 @@ def controller_batches():
 @app.route("/controller_new_supply_order")
 def controller_new_supply_order():
     security.has_role([6])
-    return render_template("controller/controller_new_supply_order.html", companies=companies.get_all_companies(), items=item.get_all_items())
+    return render_template("controller/controller_new_supply_order.html", companies=companies.get_all_companies(), items=item.get_all_items(False))
 
 
 @app.route("/order_detail/<string:order_id>")
@@ -54,3 +55,21 @@ def controller_list_sale_orders():
 def controller_create_new_user():
     security.has_role([6])
     return render_template("controller/controller_create_new_user.html")
+
+
+@app.route("/controller_sale_report")
+def controller_sale_report():
+    security.has_role([6])
+    return render_template("controller/controller_sale_report.html")
+
+
+@app.route("/controller_inventory_report")
+def controller_inventory_report():
+    security.has_role([6])
+    return render_template("controller/controller_inventory_status.html")
+
+
+@app.route("/controller_change_user_password")
+def controller_change_user_password():
+    security.has_role([6])
+    return render_template("controller/controller_change_user_password.html", users=users.get_all_users())

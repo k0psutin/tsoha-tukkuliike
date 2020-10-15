@@ -47,7 +47,7 @@ def get_user_by_name(username):  # TODO lowercase checks etc...
 
 
 def get_current_user():
-    sql = "SELECT * FROM users WHERE username=:username"
+    sql = "SELECT user_id, company_id, username, pswd FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": session["username"]})
     return result.fetchone()
 
@@ -79,11 +79,27 @@ def login(username, password):
             return False
 
 
-def create_user(username, password, auth_lvl, company_id=None):
+def create_user(username, password, validate, auth_lvl, company_id=None):
     user = get_user_by_name(username)
     if user != None:
         flash("Username is taken.", "error")
-        return 0
+        return False
+
+    if auth_lvl == 'None' or auth_lvl == 0:
+        flash("Enter authorization level (1-6")
+        return False
+
+    if len(username) < 4:
+        flash("Username must be at least 4 characters long.", "danger")
+        return False
+
+    if len(password) < 4:
+        flash("Password must be at least 4 characters long.", "danger")
+        return False
+
+    if password != validate:
+        flash("Passwords doesn't match.", "danger")
+        return False
 
     hash_value = generate_password_hash(password)
     sql = "INSERT INTO users (username, pswd, auth_lvl, company_id) VALUES (:username, :pswd, :auth_lvl, :company_id)"
@@ -101,28 +117,48 @@ def get_user_id():  # TODO errormessages
 
 
 def get_company_id():  # TODO errormessages
-    username = session["username"]
     sql = "SELECT company_id FROM users WHERE username=:username"
-    result = db.session.execute(sql, {"username": username})
+    result = db.session.execute(sql, {"username": session["username"]})
     return result.fetchone()[0]
 
 
-def change_password(old_password, validate, new_password):
+def get_user_pswd(username=None):
+    sql = "SELECT pswd FROM users WHERE username=:username"
+    if username is None:
+        result = db.session.execute(sql, {"username": session["username"]})
+    else:
+        result = db.session.execute(sql, {"username": username})
+    return result.fetchone()[0]
+
+
+def change_password(old_password, validate, new_password, username=None):
     if validate != new_password:
         flash("Passwords doesn't match!", "danger")
         return False
 
-    user = get_current_user()
+    if len(new_password) < 4:
+        flash("Password must be at least 4 characters long.", "danger")
+        return False
 
-    if check_password_hash(user[2], old_password) == False:
+    pswd = get_user_pswd(username)
+
+    if check_password_hash(pswd, old_password) == False:
         flash("Old password is wrong", "danger")
         return False
 
-    user_id = user[0]
+    if username is None:
+        username = session["username"]
 
     hash_value = generate_password_hash(new_password)
-    sql = "UPDATE users SET pswd = :password WHERE user_id = :user_id"
-    db.session.execute(sql, {"user_id": user_id, "password": hash_value})
+    sql = "UPDATE users SET pswd = :password WHERE username = :username"
+    db.session.execute(
+        sql, {"username": username, "password": hash_value})
     db.session.commit()
     flash("Password changed succesfully", "success")
     return True
+
+
+def get_all_users():
+    sql = "SELECT username FROM users"
+    result = db.session.execute(sql)
+    return result.fetchall()
