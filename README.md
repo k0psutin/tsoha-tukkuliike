@@ -39,7 +39,7 @@ Myynti:
 [x] Pystyy luomaan uusia yrityksiä tietokantaan  
 [x] Pystyy luomaan tunnuksia asiakkaille  
 [x] Voi muokata myyntitilauksia (toistaiseksi vain tilauksen poisto ja/tai tuotteen poisto)  
-[ ] Näkee tilastoja tilauksista annetulta ajalta
+[x] Näkee valitun vuoden myynnit
 
 <br>
 
@@ -48,7 +48,7 @@ Osto:
 [x] Pystyy näkemään saapuvat tuotteet, sekä varaston tuotteet  
 [x] Pystyy tekemään tilauksia tuotteille  
 [x] Pystyy lisäämään uusia tuotteita  
-[ ] Näkee yhteenvedon saapuvista sekä varaston tuotteista annetulta ajalta
+[x] Näkee yhteenvedon saapuvista, varaston tuotteista sekä myydyistä tuotteista
 
 <br>
 
@@ -63,7 +63,7 @@ Kontrolleri:
 [x] Pääsee joka osa-alueelle  
 [x] Voi luoda käyttäjiä
 [x] Voi muokata varastosaldoja, saapuvien tuotteiden saldoja  
-[ ] Näkee yhteenvetoja myynneistä, ostoista jne.
+[x] Näkee yhteenvetoja myynneistä, ostoista jne.
 
 <br>
 
@@ -81,7 +81,7 @@ Sovellus:
 
 [x] Tietokanta osio  
 [x] Käyttöohjeet  
-[ ] Asennusohje  
+[x] Asennusohje  
 [ ] Englanninkielinen versio
 
 ### Sovelluksen vaiheet
@@ -90,10 +90,14 @@ Sovellus:
 [x] Syötteiden validointi  
 [x] Varmistusikkuna mm. tilaamiseen.  
 [x] Ulkoasu kuntoon
+[x] Graafisia esityksiä myynneistä yms.
+
+### Tiedossa olevia vikoja
+
+- Onnistuneessa lomakkeen lähetyksessä tulee ilmoitus, että tietoja puuttuu. (En ole pystynyt replikoimaan vikaa.)
 
 ### Suunniteltuja toimintoja
 
-[ ] Graafisia esityksiä myynneistä yms.  
 [ ] Transaktioloki varastosiirroille  
 [ ] Roolien eriytys omaksi taulukseen  
 <br>
@@ -135,4 +139,4 @@ Asiakas: `asiakas/1234`
 
 [Tietokanta](/doc/db.md)  
 [Käyttöohjeet](/doc/kayttoohje.md)  
-Asennusohje
+[Asennusohje](/doc/asennusohje.md)
