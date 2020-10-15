@@ -6,6 +6,7 @@ function addToCart(sales = false) {
   var company_id = $('select#company_id option:checked').val()
   var price = $('#price').val()
   var qty = $('#qty').val()
+  console.log(company_id)
 
   var error = false
 
@@ -29,6 +30,21 @@ function addToCart(sales = false) {
   }
   if (price == '' || price <= 0) {
     $('#priceHelp').text('Price must be non-empty and higher than zero')
+    error = true
+  }
+
+  if (price.includes('e')) {
+    $('#priceHelp').text('Not a valid price.')
+    error = true
+  }
+
+  if (qty.includes('e')) {
+    $('#qtyHelp').text('Not a valid quantity.')
+    error = true
+  }
+
+  if (typeof Number(qty) != 'number') {
+    $('#qtyHelp').text('Invalid quantity type')
     error = true
   }
 
@@ -58,7 +74,6 @@ function addToCart(sales = false) {
   })
   $('#showCart').prop('disabled', false)
 }
-
 $(document).ready(function () {
   $.get('/cart_count', function (count) {
     if (count == 0) {
@@ -214,36 +229,6 @@ function updateItemQty(item_id, old_qty, price, slot3, slot4) {
     qty: qty,
   })
 }
-/*
-function makeOrder(sales = false, company = false) {
-  var company_id = $('#company_id').val()
-  if (sales) {
-    if (company_id == '') {
-      $('#companyHelp').text('Select a company')
-      return
-    }
-  }
-  var csrf_token = $('#csrf').val()
-  var cont = confirm('Finish order?')
-  if (cont) {
-    var item
-    if (sales) {
-      item = { csrf_token: csrf_token, company_id: company_id }
-    } else {
-      item = { csrf_token: csrf_token }
-    }
-    $.post('/finalize_order', item, function (order_id) {
-      if (sales || company) {
-        var url = location.origin + '/order_summary/' + order_id
-        window.location.replace(url)
-      } else {
-        $('#closeCart').click()
-        location.reload()
-      }
-    })
-  } else return
-}
-*/
 
 function makeOrder(sales = false, company = false) {
   var company_id = $('#company_id').val()
