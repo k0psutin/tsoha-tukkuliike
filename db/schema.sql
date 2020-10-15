@@ -5,12 +5,16 @@ CREATE TABLE companies(
 	email TEXT NOT NULL,
 	country TEXT, 
 	route SMALLINT);
+
+ALTER SEQUENCE companies_company_id_seq START WITH 1;
 	
 CREATE TABLE items(
 	item_id SERIAL PRIMARY KEY, 
 	itemname TEXT NOT NULL, 
 	price NUMERIC NOT NULL,
 	closed BOOLEAN DEFAULT FALSE);
+
+ALTER SEQUENCE items_item_id_seq START WITH 1;
 	
 CREATE TABLE users(
 	user_id SERIAL PRIMARY KEY, 
@@ -21,6 +25,8 @@ CREATE TABLE users(
 	CONSTRAINT fk_company_id
 		FOREIGN KEY(company_id)
 			REFERENCES companies(company_id));
+
+ALTER SEQUENCE users_user_id_seq START WITH 1;
 	
 CREATE TABLE orders(
 	id SERIAL PRIMARY KEY, 
@@ -48,19 +54,17 @@ CREATE INDEX order_id_idx ON orders (order_id);
 CREATE TABLE batches(
 	batch_id SERIAL PRIMARY KEY,
 	batch_nr TEXT NOT NULL,
-	company_id INT NOT NULL,
+	order_id TEXT NOT NULL,
 	item_id INT NOT NULL,
 	qty INT,
 	date TIMESTAMP,
 	user_id INT NOT NULL,
-	CONSTRAINT fk_company_id
-		FOREIGN KEY(company_id)
-			REFERENCES companies(company_id),
 	CONSTRAINT fk_user_id
 		FOREIGN KEY(user_id)
 			REFERENCES users(user_id));
 			
 CREATE INDEX batch_nr_idx ON batches (batch_nr);
+CREATE INDEX order_idx ON batches (order_id);
 			
 CREATE TABLE batchorders(
 	batchorder_id SERIAL PRIMARY KEY,
@@ -68,9 +72,6 @@ CREATE TABLE batchorders(
 	batch_nr TEXT NOT NULL,
 	item_id INT NOT NULL,
 	qty INT NOT NULL,
-	CONSTRAINT fk_order_id
-		FOREIGN KEY(order_id)
-			REFERENCES orders(order_id),
 	CONSTRAINT fk_item_id
 		FOREIGN KEY(item_id)
 			REFERENCES items(item_id));
