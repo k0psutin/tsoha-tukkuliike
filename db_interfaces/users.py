@@ -118,14 +118,14 @@ def create_user(username, password, validate, auth_lvl, company_id=None):
     flash("User %s created succesfully" % username, "success")
 
 
-def get_user_id():  # TODO errormessages
+def get_user_id():
     username = session["username"]
     sql = "SELECT user_id FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": username})
     return result.fetchone()[0]
 
 
-def get_company_id():  # TODO errormessages
+def get_company_id():
     sql = "SELECT company_id FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": session["username"]})
     return result.fetchone()[0]
