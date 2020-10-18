@@ -34,7 +34,7 @@ Myynti:
 [x] Näkee varastossa olevat tuotteet  
 [x] Pystyy luomaan uusia yrityksiä tietokantaan  
 [x] Pystyy luomaan tunnuksia asiakkaille  
-[x] Voi muokata myyntitilauksia (toistaiseksi vain tilauksen poisto ja/tai tuotteen poisto)  
+[x] Voi muokata myyntitilauksia
 [x] Näkee valitun vuoden myynnit
 
 Osto:  
@@ -65,17 +65,17 @@ Sovellus:
 
 ## Dokumentaation vaiheet
 
-[x] Tietokanta osio
-[x] Käyttöohjeet
-[x] Asennusohje
+[x] Tietokanta osio  
+[x] Käyttöohjeet  
+[x] Asennusohje  
 [x] Englanninkielinen versio dokumentaatiosta
 
 ## Sovelluksen vaiheet
 
-[x] Runko valmiiksi
-[x] Syötteiden validointi
-[x] Varmistusikkuna mm. tilaamiseen.
-[x] Ulkoasu kuntoon
+[x] Runko valmiiksi  
+[x] Syötteiden validointi  
+[x] Varmistusikkuna mm. tilaamiseen.  
+[x] Ulkoasu kuntoon  
 [x] Graafisia esityksiä myynneistä yms.
 
 ## Sovelluksen osoite:
@@ -84,11 +84,11 @@ Sovellus:
 
 ## Käyttäjätunnukset:
 
-Logistiikka: `varasto/1234`
-Keräily: `keraily/1234`
-Osto: `osto/1234`
-Myynti: `myynti/1234`
-Kontrolleri: `kontrolleri/1234`
+Logistiikka: `varasto/1234`  
+Keräily: `keraily/1234`  
+Osto: `osto/1234`  
+Myynti: `myynti/1234`  
+Kontrolleri: `kontrolleri/1234`  
 Asiakas: `asiakas/1234`
 
 ## Käyttäjätasot
@@ -104,6 +104,6 @@ Asiakas: `asiakas/1234`
 
 ## Dokumentaatio
 
-[Tietokanta](/doc/db.md)
-[Käyttöohjeet](/doc/kayttoohje.md)
+[Tietokanta](/doc/db.md)  
+[Käyttöohjeet](/doc/kayttoohje.md)  
 [Asennusohje](/doc/asennusohje.md)
