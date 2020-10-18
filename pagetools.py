@@ -9,11 +9,11 @@ import db_interfaces.item as item
 
 
 def supply_order_page_count():
-    page_count = orders.get_orders_page_count(True)
+    page_count = orders.get_orders_page_count()
     if page_count == None:
         page_count = 0
     else:
-        page_count = math.ceil(page_count[0]/session["row_count"])
+        page_count = math.ceil(page_count/session["row_count"])
 
     if session["supply"] > page_count-1:
         session["supply"] = 0

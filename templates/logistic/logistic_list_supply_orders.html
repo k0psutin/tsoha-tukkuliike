@@ -26,7 +26,7 @@
   {% endfor %}
   </tbody>
 </table>
-{% with current_page = session.supply, type = "supply", page_count = session.order_page_count, page_count_name ="order_page_count" %}
+{% with current_page = session.supply, type = "supply", page_count = session.supply_page_count, page_count_name ="supply_page_count" %}
 {% include "pagination.html" %}
 {% endwith %}
 </div>

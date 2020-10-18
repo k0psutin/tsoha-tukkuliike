@@ -149,7 +149,7 @@ def update_sale_order_item_qty(order_id, item_id, company_id, qty):
     db.session.commit()
 
 
-def create_sale_order(order_id, saleList):
+def create_sale_order(order_id, sale_list):
     sql = "SELECT order_id FROM orders WHERE order_id = :order_id"
     result = db.session.execute(sql, {"order_id": order_id})
     if order_id == result.fetchone():
@@ -159,16 +159,25 @@ def create_sale_order(order_id, saleList):
     sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id)
              VALUES (:order_id, :company_id, :item_id, FALSE, NOW(), NOW() + INTERVAL '1 DAY', :qty, :price, :user_id);"""
 
-    db.session.execute(sql, saleList)
+    db.session.execute(sql, sale_list)
     db.session.commit()
 
     return order_id
 
 
-def get_orders_page_count(supply):
-    sql = "SELECT COUNT(*) FROM orders WHERE qty > 0 AND supply = :supply"
-    result = db.session.execute(sql, {"supply": supply})
-    return result.fetchone()
+def get_orders_page_count():
+    sql = """SELECT orders.order_id, orders.company_id, companies.compname, companies.country, orders.orderdate, orders.item_id, items.itemname, orders.qty
+           FROM orders
+           INNER JOIN companies ON
+           (orders.company_id = companies.company_id)
+           INNER JOIN items ON
+           (orders.item_id= items.item_id) WHERE orders.supply = TRUE AND orders.qty > 0
+           ORDER BY orders.orderdate"""
+    result = db.session.execute(sql)
+    if result == None:
+        return 0
+    else:
+        return len(result.fetchall())
 
 
 def get_all_sale_order_page_count(show_all):
@@ -219,12 +228,13 @@ def get_all_supply_orders():
     return result.fetchall()
 
 
-def create_supply_order(orderList):
+def create_supply_order(order_list):
 
     sql = """INSERT INTO orders (order_id, company_id, item_id, supply, orderDate, dispatchDate, qty, price, user_id)
              VALUES (:order_id, :company_id, :item_id, TRUE, NOW(), NOW() + INTERVAL '1 DAY', :qty, :price, :user_id);"""
 
-    db.session.execute(sql, orderList)
+    print(order_list)
+    db.session.execute(sql, order_list)
     db.session.commit()
 
 
