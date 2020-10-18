@@ -42,10 +42,6 @@ def check_if_batch_exists(batch_nr):
 def update_supply_order_qty(order_id, new_qty, show=True):
     order = get_supply_order_by_id(order_id)
 
-    if "e" in new_qty:
-        flash("Enter a valid integer", "danger")
-        return
-
     if order == None:
         flash("Invalid order id", "danger")
         return
