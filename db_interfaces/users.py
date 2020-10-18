@@ -65,7 +65,7 @@ def login(username, password):
             session["auth_lvl"] = user[2]
             session["cart"] = []
 
-            # Keeps track of current page number
+            # Keeps track of the current page number
 
             session["supply"] = 0
             session["sale"] = 0
