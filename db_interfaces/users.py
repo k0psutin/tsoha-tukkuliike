@@ -64,12 +64,15 @@ def login(username, password):
             session["csrf_token"] = urandom(16).hex()
             session["auth_lvl"] = user[2]
             session["cart"] = []
+
             session["supply"] = 0
             session["sale"] = 0
             session["batch"] = 0
             session["item"] = 0
+
             session["row_count"] = 10
-            session["order_page_count"] = 0
+
+            session["supply_page_count"] = 0
             session["batch_page_count"] = 0
             session["sale_page_count"] = 0
             session["item_page_count"] = 0

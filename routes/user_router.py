@@ -16,9 +16,10 @@ def logout():
     del session["item"]
     del session["batch_page_count"]
     del session["sale_page_count"]
-    del session["order_page_count"]
+    del session["supply_page_count"]
     del session["item_page_count"]
     del session["row_count"]
+
     flash("Logged out successfully", "success")
     return redirect("/")
 
