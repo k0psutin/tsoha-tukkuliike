@@ -16,20 +16,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
---
--- Name: adminpack; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS adminpack WITH SCHEMA pg_catalog;
-
-
---
--- Name: EXTENSION adminpack; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION adminpack IS 'administrative functions for PostgreSQL';
-
-
 SET default_tablespace = '';
 
 SET default_table_access_method = heap;
@@ -41,7 +27,7 @@ SET default_table_access_method = heap;
 CREATE TABLE public.batches (
     batch_id integer NOT NULL,
     batch_nr text NOT NULL,
-    company_id integer NOT NULL,
+    order_id text NOT NULL,
     item_id integer NOT NULL,
     qty integer,
     date timestamp without time zone,
@@ -77,8 +63,8 @@ CREATE TABLE public.batchorders (
     batchorder_id integer NOT NULL,
     order_id text NOT NULL,
     batch_nr text NOT NULL,
-    qty integer NOT NULL,
-    item_id integer NOT NULL
+    item_id integer NOT NULL,
+    qty integer NOT NULL
 );
 
 
@@ -144,7 +130,7 @@ CREATE TABLE public.items (
     item_id integer NOT NULL,
     itemname text NOT NULL,
     price numeric NOT NULL,
-    closed boolean
+    closed boolean DEFAULT false
 );
 
 
@@ -246,10 +232,10 @@ ALTER SEQUENCE public.shipments_shipment_id_seq OWNED BY public.shipments.shipme
 
 CREATE TABLE public.users (
     user_id integer NOT NULL,
-    username text UNIQUE,
+    company_id integer,
+    username text NOT NULL,
     pswd text NOT NULL,
-    auth_lvl smallint NOT NULL,
-    company_id integer
+    auth_lvl smallint NOT NULL
 );
 
 
@@ -326,14 +312,12 @@ ALTER TABLE ONLY public.users ALTER COLUMN user_id SET DEFAULT nextval('public.u
 -- Data for Name: batches; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.batches (batch_id, batch_nr, company_id, item_id, qty, date, user_id) FROM stdin;
-3	CN090920PE	7	25	0	2020-09-09 14:10:12.461964	1
-1	T7080920MM	11	2	11	2020-09-08 22:32:38.312674	1
-6	MY100920BR	4	7	126	2020-09-10 08:50:13.407812	1
-7	BN100920BR	4	8	54	2020-09-10 08:50:21.402202	1
-5	BN100920FR	15	8	45	2020-09-10 08:49:48.445766	1
-2	TE090920CN	24	24	34	2020-09-09 12:54:40.311423	1
-4	CN090920SI	8	25	265	2020-09-09 22:15:55.445475	1
+COPY public.batches (batch_id, batch_nr, order_id, item_id, qty, date, user_id) FROM stdin;
+1	SN101020CA	752586	6	84	2020-10-10 13:16:15.157518	2
+2	SN101020ID	275094	6	66	2020-10-10 13:16:19.088254	2
+3	IY101020CA	620019	5	74	2020-10-10 13:16:23.149111	2
+4	NL101020CA	38996	4	46	2020-10-10 13:16:26.85428	2
+5	NL101020ID	616081	4	104	2020-10-10 13:16:35.691371	2
 \.
 
 
@@ -341,12 +325,7 @@ COPY public.batches (batch_id, batch_nr, company_id, item_id, qty, date, user_id
 -- Data for Name: batchorders; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.batchorders (batchorder_id, order_id, batch_nr, qty, item_id) FROM stdin;
-11	4219231	MY100920BR	2	7
-13	4219231	BN100920BR	2	8
-12	4219231	BN100920FR	6	8
-14	6146631	TE090920CN	33	24
-15	6146631	CN090920SI	33	25
+COPY public.batchorders (batchorder_id, order_id, batch_nr, item_id, qty) FROM stdin;
 \.
 
 
@@ -355,31 +334,27 @@ COPY public.batchorders (batchorder_id, order_id, batch_nr, qty, item_id) FROM s
 --
 
 COPY public.companies (company_id, compname, address, email, country, route) FROM stdin;
-1	Blistex Inc	945 Cherokee Street	glyffe0@istockphoto.com	JP	4
-2	Apotheca Company	228 Hayes Crossing	zcoldicott1@chronoengine.com	PE	4
-3	China Ningbo Shangge Cosmetic Technology Corp	360 Quincy Park	kmaliffe2@exblog.jp	JP	5
-4	Dharma Research, inc.	09 Thierer Road	hlaughtisse3@abc.net.au	BR	2
-5	Golden State Medical Supply, Inc.	1 Moland Point	gdomokos4@booking.com	SI	1
-6	Taro Pharmaceuticals U.S.A., Inc.	378 Bayside Hill	pdrohun5@nih.gov	PH	3
-7	A-S Medication Solutions LLC	5 Lien Terrace	glabusch6@thetimes.co.uk	PE	3
-8	Medline Industries, Inc.	7 Stoughton Point	cpache7@blinklist.com	SI	4
-9	SHISEIDO CO., LTD.	3 Basil Parkway	mshepherdson8@admin.ch	HT	2
-10	Rebel Distributors Corp.	64 Brown Parkway	nironmonger9@gmpg.org	CN	4
-11	JHP Pharmaceuticals, LLC	03 Cascade Circle	hchella@nih.gov	MM	4
-12	Nelco Laboratories, Inc.	9 Lakeland Center	aaughtieb@biglobe.ne.jp	CO	1
-13	Paddock Laboratories, LLC	2 Sugar Hill	rmacgraithc@livejournal.com	CN	5
-14	Qualitest Pharmaceuticals	9 Lyons Point	lleupoldtd@weibo.com	ET	4
-15	clinique laboratories inc	1381 Melby Junction	ddallistone@freewebs.com	FR	1
-16	Physicians Total Care, Inc.	6465 Starling Street	kspennockf@etsy.com	RU	5
-17	Pamlab, L.L.C.	57 Muir Pass	mtuffieldg@toplist.cz	PL	5
-18	Advanced Skin Technology, LLC	22 Miller Circle	gdredgeh@com.com	CN	4
-19	Bryant Ranch Prepack	462 Delladonna Plaza	rgrattani@cafepress.com	CY	3
-20	American Sales Company	36983 Corry Street	fpickstonj@bizjournals.com	AX	1
-21	Johnson & Johnson Consumer Products Company, Division of Johnson & Johnson Consumer Companies, Inc.	3483 Morrow Parkway	tmacavaddyk@ehow.com	PH	1
-22	State of Florida DOH Central Pharmacy	53 Elka Circle	rhendonsonl@ted.com	ID	1
-23	Preferred Pharmaceuticals, Inc	836 Weeping Birch Road	cbuskem@com.com	JP	1
-24	US WorldMeds, LLC	140 Mandrake Junction	frolinsonn@smugmug.com	CN	2
-25	Unifirst First Aid Corporation	46514 Algoma Place	cternaulto@omniture.com	PT	4
+1	Labadie Group	8717 Brentwood Park	mdonati0@archive.org	DO	3
+2	Barrows, O'Reilly and Klocko	533 Ronald Regan Court	etowsey1@i2i.jp	CN	14
+3	Cassin and Sons	6 Maryland Point	flythgoe2@angelfire.com	ID	9
+4	Crooks-Douglas	05 Little Fleur Road	gfenge3@answers.com	TH	17
+5	Conroy-Tremblay	5 Montana Hill	gcarle4@symantec.com	TJ	18
+6	Kovacek-Gutkowski	85611 Laurel Court	nbockh5@ask.com	BR	17
+7	Bailey-Emmerich	263 Eggendart Court	rparlet6@skype.com	NA	4
+8	Jerde, Yundt and Nikolaus	42661 Badeau Avenue	cbuy7@google.co.uk	ID	9
+9	Kovacek and Sons	64540 Heffernan Terrace	vpetrillo8@ameblo.jp	CN	16
+10	Ankunding, Johnston and Lebsack	0988 Tomscot Avenue	epaolillo9@liveinternet.ru	JM	2
+11	Frami-Klein	68557 Havey Drive	tabbysa@sohu.com	ID	11
+12	Heller-Weber	79649 Kipling Crossing	vchatinb@soundcloud.com	CN	9
+13	Williamson-Rolfson	14126 Monument Place	jlafeec@tumblr.com	US	6
+14	Jacobs-Flatley	15 Mockingbird Center	kgoldsbroughd@army.mil	TZ	16
+15	Gottlieb LLC	59631 Colorado Avenue	rivanuschkae@linkedin.com	CN	11
+16	Windler-Rogahn	2881 Carioca Street	aarnoldf@usnews.com	PL	7
+17	Bashirian, Rice and Bailey	520 Hanson Avenue	acastong@npr.org	US	5
+18	Corkery-Harris	61 Kedzie Center	arobineth@google.fr	KH	12
+19	Skiles-Weimann	2263 Del Mar Hill	fwaterlandi@stanford.edu	CA	19
+20	Mante-Lowe	3549 Evergreen Parkway	dglazej@networkadvertising.org	ID	1
+21	Mehupojat OY	Mehupoikatie 3	osto@mehupojat.fi	FI	3
 \.
 
 
@@ -388,32 +363,17 @@ COPY public.companies (company_id, compname, address, email, country, route) FRO
 --
 
 COPY public.items (item_id, itemname, price, closed) FROM stdin;
-1	MEGACE	1.51	f
-2	Treatment Set TS348237	3.46	f
-3	Acacia	0.96	f
-4	Oxygen	3.31	f
-5	Billiousness	2.76	f
-6	ShopRite Day Calm	3.25	f
-7	Milk of Magnesia Wild Cherry	3.96	f
-8	BEBULIN	3.65	f
-9	Ziprasidone Hydrochloride	3.05	f
-10	Lovastatin	3.33	f
-11	GUNA-ALLERGY-PREV	0.6	f
-12	Halls	4.9	f
-13	Truvada	4.08	f
-14	Teething Pain	0.77	f
-15	ARIMIDEX	0.71	f
-16	Pramipexole Dihydrochloride	4.65	f
-17	Potassium Chloride	4.48	f
-18	Western White Pine	4.3	f
-19	Instant Hand Sanitizer	2.65	f
-20	Zyprexa	0.51	f
-21	Hoarse Cough	3.1	f
-22	Menstrual Relief	3.48	f
-23	Hydrocodone Bitartrate and Acetaminophen	0.95	f
-24	Triamcinolone Acetonide	2.33	f
-25	Cefazolin	2.6	f
-26	Beer	1.23	f
+1	Tea - Jasmin Green	0.92	f
+2	Grapes - Red	0.76	f
+3	Coffee - Ristretto Coffee Capsule	1.36	f
+4	Nantucket - 518ml	1.07	f
+5	Ice Cream - Strawberry	3.07	f
+6	Spinach - Frozen	0.76	f
+7	Pea - Snow	1.1	f
+8	Cranberries - Dry	1.41	f
+9	Dried Cranberries	2.83	f
+10	Grapefruit - Pink	2.67	f
+11	Grapefruit - Yellow	1.33	f
 \.
 
 
@@ -422,40 +382,70 @@ COPY public.items (item_id, itemname, price, closed) FROM stdin;
 --
 
 COPY public.orders (id, order_id, company_id, item_id, supply, orderdate, dispatchdate, qty, price, user_id) FROM stdin;
-1126	2838343	19	17	t	2019-10-08 15:06:46	\N	72	1.85	4
-1127	5316085	9	1	t	2020-06-08 17:32:25	\N	59	1.57	4
-1128	2361570	12	23	t	2019-12-21 03:50:02	\N	83	1.83	4
-1129	5780130	3	18	t	2020-06-17 05:38:05	\N	20	1.74	4
-1130	1847060	16	11	t	2020-07-30 23:21:04	\N	84	0.81	4
-1132	2897377	22	23	t	2020-05-18 07:06:52	\N	54	0.53	4
-1133	6098635	21	23	t	2019-10-14 17:58:53	\N	18	1.72	4
-1134	5867383	6	10	t	2020-09-04 20:41:48	\N	91	1.37	4
-1136	6091405	7	10	t	2019-12-30 01:42:46	\N	71	1.01	4
-1138	6038245	1	17	t	2020-08-03 02:11:10	\N	99	1.94	4
-1139	2880436	24	13	t	2020-03-13 21:08:45	\N	13	1.74	4
-1141	3763218	2	19	t	2020-06-15 11:18:12	\N	72	0.66	4
-1142	5780752	21	23	t	2020-06-10 14:27:41	\N	17	0.8	4
-1143	6531975	6	10	t	2020-05-08 13:02:35	\N	57	0.81	4
-1144	5335462	15	17	t	2019-11-24 12:57:04	\N	22	1.77	4
-1145	6102257	25	17	t	2019-09-07 13:37:02	\N	26	1.12	4
-1146	1179795	20	1	t	2019-12-23 00:24:47	\N	44	0.56	4
-1147	6243348	21	9	t	2019-11-11 17:10:35	\N	59	1.19	4
-1148	2951735	14	13	t	2019-12-27 01:12:16	\N	81	1.33	4
-1149	2539244	7	23	t	2020-01-08 11:38:29	\N	117	1.72	4
-1150	3874611	5	3	t	2019-10-27 02:28:49	\N	48	1.61	4
-1140	1422575	11	2	t	2019-09-03 22:58:52	\N	0	1.88	4
-1175	6146631	17	24	f	2020-09-09 11:04:07.640314	2020-09-10 11:04:07.640314	33	1.34	6
-1176	6146631	17	25	f	2020-09-09 11:04:07.640314	2020-09-10 11:04:07.640314	33	3.34	6
-1131	3534323	24	24	t	2019-10-25 01:12:22	\N	0	1.67	4
-1135	5582622	7	25	t	2020-02-07 05:51:14	\N	0	0.9	4
-1180	1040725	4	9	t	2020-09-09 21:51:35.973925	2020-09-10 21:51:35.973925	94	0.78	4
-1177	0399942	8	25	t	2020-09-09 21:48:06.216219	2020-09-10 21:48:06.216219	0	0.43	4
-1181	4219231	17	7	f	2020-09-09 23:27:22.209899	2020-09-10 23:27:22.209899	2	2.22	6
-1182	4219231	17	8	f	2020-09-09 23:27:22.209899	2020-09-10 23:27:22.209899	15	1.11	6
-1183	4219231	17	9	f	2020-09-09 23:27:22.209899	2020-09-10 23:27:22.209899	3	3.21	6
-1137	4249544	15	8	t	2019-12-23 18:40:45	\N	0	0.97	4
-1178	0532833	4	7	t	2020-09-09 21:51:35.973925	2020-09-10 21:51:35.973925	0	1.12	4
-1179	4634333	4	8	t	2020-09-09 21:51:35.973925	2020-09-10 21:51:35.973925	167	1.03	4
+1	795798	8	10	f	2019-12-16 12:59:22	2020-08-11 13:09:00	123	2.85	4
+2	807846	9	5	f	2020-05-07 04:30:28	2019-11-28 20:41:41	143	2.71	4
+3	4668	9	5	f	2020-05-21 05:46:08	2020-05-09 08:02:20	49	1.86	4
+4	203642	20	8	f	2019-11-25 01:28:46	2019-10-08 14:19:09	123	2.39	4
+5	378987	11	2	f	2020-03-03 14:14:52	2020-04-14 08:19:15	58	1.62	4
+6	630914	19	9	f	2019-12-20 03:43:37	2020-02-07 14:05:59	108	2.14	4
+7	415491	3	3	f	2020-02-18 17:10:45	2020-05-29 04:00:06	140	1.7	4
+8	456575	11	9	f	2020-01-05 11:07:23	2020-08-01 19:16:58	37	2.82	4
+9	958617	5	3	f	2020-03-10 10:26:37	2020-08-24 01:20:52	96	1.74	4
+10	922448	14	6	f	2020-04-20 13:39:31	2020-09-26 01:54:30	51	2.96	4
+11	401252	19	10	f	2020-04-14 02:25:14	2020-04-02 06:56:52	50	2.57	4
+12	472926	6	2	f	2020-05-28 00:48:38	2020-03-23 07:50:53	15	1.57	4
+13	407077	10	9	f	2020-01-13 01:45:20	2020-04-10 11:56:01	64	2.51	4
+14	382276	2	10	f	2020-06-06 20:20:51	2020-07-19 10:17:01	130	1.74	4
+15	101018	8	3	f	2020-03-30 12:05:44	2020-08-10 00:39:03	32	2.04	4
+16	120275	3	4	f	2020-01-12 07:30:52	2020-09-23 21:19:34	29	2.03	4
+17	350320	7	5	f	2020-03-09 16:20:21	2019-11-18 10:28:43	130	1.4	4
+18	60750	12	6	f	2019-11-26 08:03:50	2020-04-24 21:07:37	108	1.47	4
+19	566089	3	6	f	2019-10-22 08:31:32	2020-05-06 07:55:04	25	1.29	4
+20	803629	17	9	f	2020-01-31 19:03:25	2020-01-06 22:10:01	97	2.63	4
+21	321791	11	9	f	2020-09-22 01:03:15	2020-03-13 03:31:50	119	1.15	4
+22	967325	8	5	f	2020-07-28 07:36:55	2020-05-30 03:21:04	85	1.58	4
+23	188928	9	4	f	2019-12-02 08:24:24	2020-03-09 23:52:07	111	1.73	4
+24	219155	17	1	f	2020-09-21 19:26:34	2019-10-23 17:25:49	27	1.77	4
+25	584743	4	10	f	2020-07-14 05:28:02	2020-02-09 16:23:11	103	2.37	4
+26	29952	16	2	f	2020-04-11 08:44:10	2020-04-05 05:20:51	124	2.85	4
+27	324447	5	9	f	2020-08-10 01:26:43	2020-03-13 05:41:10	36	2.42	4
+28	480374	9	5	f	2019-10-29 23:28:39	2020-09-05 07:58:00	138	1.83	4
+29	869198	17	3	f	2020-09-09 04:26:39	2020-03-18 01:06:26	64	1.54	4
+30	926588	16	10	f	2019-10-26 06:34:05	2020-07-20 00:24:36	32	2.54	4
+31	269820	9	10	t	2020-08-09 12:22:56	\N	43	1.64	5
+34	461076	13	1	t	2020-08-05 20:47:41	\N	71	2.56	5
+35	188719	18	10	t	2020-01-24 18:49:59	\N	119	1.78	5
+36	19624	10	6	t	2020-06-27 13:15:32	\N	81	1.74	5
+38	115806	1	8	t	2020-01-16 03:34:24	\N	132	2.8	5
+39	532903	17	1	t	2020-02-07 16:22:46	\N	45	2.79	5
+40	77245	5	5	t	2020-01-30 09:12:22	\N	100	2.27	5
+41	53451	19	6	t	2020-04-26 15:50:55	\N	99	1.53	5
+42	782312	16	4	t	2020-05-24 11:25:09	\N	25	1.51	5
+43	622187	6	8	t	2020-05-17 06:41:00	\N	76	1.62	5
+44	597852	3	3	t	2020-09-19 10:28:50	\N	73	1.04	5
+45	468271	13	5	t	2020-08-31 05:27:42	\N	134	1.34	5
+47	269729	11	10	t	2020-08-14 05:33:12	\N	80	1.58	5
+48	243755	7	2	t	2020-09-19 11:54:12	\N	43	2.02	5
+49	682215	15	5	t	2020-01-16 11:21:20	\N	29	2.65	5
+50	19153	12	8	t	2019-12-29 20:02:01	\N	67	1.54	5
+51	29234	1	3	t	2020-02-16 15:24:40	\N	143	1.76	5
+53	569284	2	4	t	2020-03-16 00:48:42	\N	27	2.35	5
+54	912335	10	3	t	2020-01-14 05:43:24	\N	82	2.91	5
+55	619267	5	10	t	2020-03-15 22:13:00	\N	133	2.86	5
+56	184552	2	6	t	2020-03-09 17:47:26	\N	74	1.55	5
+57	747545	8	6	t	2020-04-17 03:25:13	\N	100	1.32	5
+58	324141	15	10	t	2019-12-24 12:57:26	\N	19	2.54	5
+59	990580	9	6	t	2020-08-02 06:40:09	\N	74	2.39	5
+60	371918	15	4	t	2020-04-26 03:09:41	\N	78	1.82	5
+61	7425172	21	10	t	2020-10-10 13:09:47.179432	2020-10-11 13:09:47.179432	111	1.02	5
+62	7065440	21	11	t	2020-10-10 13:15:38.783072	2020-10-11 13:15:38.783072	111	1.08	5
+32	752586	19	6	t	2019-10-19 15:24:56	\N	0	1.95	5
+37	275094	3	6	t	2019-11-17 22:44:46	\N	0	1.48	5
+52	620019	19	5	t	2019-11-20 21:18:36	\N	0	2.58	5
+46	38996	19	4	t	2019-12-07 02:06:54	\N	0	2.85	5
+33	616081	20	4	t	2019-12-19 05:43:59	\N	0	2.37	5
+63	9905340	21	8	f	2020-10-10 13:34:33.602042	2020-10-11 13:34:33.602042	111	1.41	7
+64	9648020	21	2	f	2020-10-15 12:39:41.148597	2020-10-16 12:39:41.148597	11	1.22	4
 \.
 
 
@@ -464,8 +454,6 @@ COPY public.orders (id, order_id, company_id, item_id, supply, orderdate, dispat
 --
 
 COPY public.shipments (shipment_id, order_id, batchorder_id, user_id, done, collected) FROM stdin;
-1	6146631	14	2	2020-09-10 14:04:19.105054	f
-2	6146631	15	2	2020-09-10 14:04:19.105054	f
 \.
 
 
@@ -473,13 +461,16 @@ COPY public.shipments (shipment_id, order_id, batchorder_id, user_id, done, coll
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: -
 --
 
-COPY public.users (user_id, username, pswd, auth_lvl, company_id) FROM stdin;
-1	varasto	pbkdf2:sha256:150000$7igSzBKb$34bb633f05bf3ea49ec78d0312a282a111e7e9e0aaa66cfa4cd8fea1a4ef849f	2	\N
-2	keraily	pbkdf2:sha256:150000$g2bsEmcq$a618b67daddb86e4ecceee3736b7fd8989c3aaa05aeea9f43f0062ca0f85ba66	3	\N
-3	myynti	pbkdf2:sha256:150000$MtU2PXXi$3ff60b700f60b4ad3b99e721da67d44f8eca5d67dac126f07b32c25cbe31e684	4	\N
-4	osto	pbkdf2:sha256:150000$7Bjb98Le$98f8a7623e5806528bd8aae6841ae499695af945a9b68c4e334e24489b105deb	5	\N
-5	kontrolleri	pbkdf2:sha256:150000$F1lxBXs6$aac3395ce18a9ab3080c7b730c0437abe1a8ac8b46fb3f6199bab16bad789171	6	\N
-6	asiakas	pbkdf2:sha256:150000$gIYwSqNi$2075a6d901645193ddfe6957286cc0bae266f3565a8ee4181b2f0f746de8c0b3	1	17
+COPY public.users (user_id, company_id, username, pswd, auth_lvl) FROM stdin;
+1	17	asiakas	pbkdf2:sha256:150000$gIYwSqNi$2075a6d901645193ddfe6957286cc0bae266f3565a8ee4181b2f0f746de8c0b3	1
+3	\N	keraily	pbkdf2:sha256:150000$g2bsEmcq$a618b67daddb86e4ecceee3736b7fd8989c3aaa05aeea9f43f0062ca0f85ba66	3
+4	\N	myynti	pbkdf2:sha256:150000$MtU2PXXi$3ff60b700f60b4ad3b99e721da67d44f8eca5d67dac126f07b32c25cbe31e684	4
+5	\N	osto	pbkdf2:sha256:150000$7Bjb98Le$98f8a7623e5806528bd8aae6841ae499695af945a9b68c4e334e24489b105deb	5
+6	\N	kontrolleri	pbkdf2:sha256:150000$F1lxBXs6$aac3395ce18a9ab3080c7b730c0437abe1a8ac8b46fb3f6199bab16bad789171	6
+7	21	mehupojat	pbkdf2:sha256:150000$qbQhAdQ8$e81441656d38de5f3dcf95c9a2a9e6018cc0a057a272412c5afe5459b3465268	1
+8	\N	varasto2	pbkdf2:sha256:150000$Da4dsuEh$9ec2110a6eacdf5ff25ebece86cb26d170321bdef1da11f0b518b6ee9727131d	2
+2	\N	varasto	pbkdf2:sha256:150000$CFudLCHc$c3c6abf7fc25a057d1cefbc67d23c451d5f395ce0980a1ee9b3412968ea75315	2
+9	\N	osto2	pbkdf2:sha256:150000$4uIvzoQ1$11ceb4ebbd2bdce0dd38c084c407d847a4c16362ee1bf3d0bb43771336899a37	5
 \.
 
 
@@ -487,49 +478,49 @@ COPY public.users (user_id, username, pswd, auth_lvl, company_id) FROM stdin;
 -- Name: batches_batch_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.batches_batch_id_seq', 7, true);
+SELECT pg_catalog.setval('public.batches_batch_id_seq', 5, true);
 
 
 --
 -- Name: batchorders_batchorder_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.batchorders_batchorder_id_seq', 15, true);
+SELECT pg_catalog.setval('public.batchorders_batchorder_id_seq', 1, false);
 
 
 --
 -- Name: companies_company_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.companies_company_id_seq', 25, true);
+SELECT pg_catalog.setval('public.companies_company_id_seq', 21, true);
 
 
 --
 -- Name: items_item_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.items_item_id_seq', 26, true);
+SELECT pg_catalog.setval('public.items_item_id_seq', 11, true);
 
 
 --
 -- Name: orders_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.orders_id_seq', 1183, true);
+SELECT pg_catalog.setval('public.orders_id_seq', 64, true);
 
 
 --
 -- Name: shipments_shipment_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.shipments_shipment_id_seq', 2, true);
+SELECT pg_catalog.setval('public.shipments_shipment_id_seq', 1, false);
 
 
 --
 -- Name: users_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: -
 --
 
-SELECT pg_catalog.setval('public.users_user_id_seq', 6, true);
+SELECT pg_catalog.setval('public.users_user_id_seq', 9, true);
 
 
 --
@@ -589,10 +580,24 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: batch_nr_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX batch_nr_idx ON public.batches USING btree (batch_nr);
+
+
+--
 -- Name: order_id_idx; Type: INDEX; Schema: public; Owner: -
 --
 
 CREATE INDEX order_id_idx ON public.orders USING btree (order_id);
+
+
+--
+-- Name: order_idx; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE INDEX order_idx ON public.batches USING btree (order_id);
 
 
 --
@@ -604,27 +609,19 @@ ALTER TABLE ONLY public.shipments
 
 
 --
--- Name: orders fk_company; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: users fk_company_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.users
+    ADD CONSTRAINT fk_company_id FOREIGN KEY (company_id) REFERENCES public.companies(company_id);
+
+
+--
+-- Name: orders fk_company_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.orders
-    ADD CONSTRAINT fk_company FOREIGN KEY (company_id) REFERENCES public.companies(company_id);
-
-
---
--- Name: batches fk_company; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.batches
-    ADD CONSTRAINT fk_company FOREIGN KEY (company_id) REFERENCES public.companies(company_id);
-
-
---
--- Name: orders fk_item; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY public.orders
-    ADD CONSTRAINT fk_item FOREIGN KEY (item_id) REFERENCES public.items(item_id);
+    ADD CONSTRAINT fk_company_id FOREIGN KEY (company_id) REFERENCES public.companies(company_id);
 
 
 --
@@ -636,19 +633,19 @@ ALTER TABLE ONLY public.batchorders
 
 
 --
--- Name: orders fk_user; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: orders fk_item_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.orders
-    ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+    ADD CONSTRAINT fk_item_id FOREIGN KEY (item_id) REFERENCES public.items(item_id);
 
 
 --
--- Name: batches fk_user; Type: FK CONSTRAINT; Schema: public; Owner: -
+-- Name: batches fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.batches
-    ADD CONSTRAINT fk_user FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(user_id);
 
 
 --
@@ -656,6 +653,14 @@ ALTER TABLE ONLY public.batches
 --
 
 ALTER TABLE ONLY public.shipments
+    ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(user_id);
+
+
+--
+-- Name: orders fk_user_id; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.orders
     ADD CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users(user_id);
 
 
