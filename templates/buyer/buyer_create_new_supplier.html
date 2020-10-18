@@ -1,0 +1,12 @@
+{% extends "layout.html" %} 
+{% block title %}Buyer{% endblock %} 
+{% block header %}Buyer view{% endblock %}
+{% block upper_content %} 
+{% with new_supplier = true %}
+{% include "/buyer/buyer_layout.html" %}
+{% endwith %}
+<div class="text-center">
+<h2>Create new supplier</h2>
+</div>
+{% include "sale/sale_create_company_form.html" %}
+{% endblock %}

@@ -1,10 +1,10 @@
 from db_interfaces.db import db
 from flask import flash
 import re
+import security
 
 
 def create_company(compname, address, email, country, route):
-
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@][a-z0-9]+[.][a-z][a-z]+$'
 
     if re.search(regex, email.lower()) == None:
@@ -30,6 +30,7 @@ def create_company(compname, address, email, country, route):
 
     if company != None:
         flash("Company %s already exists" % compname, "danger")
+        return False
 
     sql = """INSERT INTO 
             companies (compname, address, email, country, route) 
@@ -37,7 +38,10 @@ def create_company(compname, address, email, country, route):
     db.session.execute(sql, {"compname": compname, "address": address,
                              "email": email, "country": country, "route": route})
     db.session.commit()
-    flash("Company %s added succesfully" % compname, "success")
+    if security.has_auth([4]):
+        flash("Company %s added succesfully" % compname, "success")
+    else:
+        flash("Supplier %s added succesfully" % compname, "success")
     return True
 
 

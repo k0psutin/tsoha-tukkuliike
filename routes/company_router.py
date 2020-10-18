@@ -11,7 +11,7 @@ import security
 @app.route("/create_new_company", methods=["POST"])
 def create_new_company():
     security.has_csrf_token(session["csrf_token"])
-    security.has_auth([4, 6])
+    security.has_role([4, 5, 6])
     compname = request.form["compname"]
     address = request.form["address"]
     email = request.form["email"]
@@ -22,9 +22,15 @@ def create_new_company():
         compname, address, email, country, route)
 
     if success == False:
-        return render_template("/sale/sale_create_company.html", compname=compname, address=address, route=route, email=email, country=country)
+        if security.has_auth([4, 6]):
+            return render_template("/sale/sale_create_company.html", compname=compname, address=address, route=route, email=email, country=country)
+        if security.has_auth([5]):
+            return render_template("/buyer/buyer_create_new_supplier.html", compname=compname, address=address, route=route, email=email, country=country)
     else:
-        return redirect("/create_company")
+        if security.has_auth([4, 6]):
+            return redirect("/create_company")
+        if security.has_auth([5]):
+            return redirect("/create_new_supplier")
 
 
 @app.route("/create_new_company_user", methods=["POST"])

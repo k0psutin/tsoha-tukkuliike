@@ -58,29 +58,15 @@ def supply_order_form():
     return render_template("buyer/buyer_supply_order.html", companies=companies.get_all_companies(), items=item.get_all_items(False))
 
 
-@app.route("/place_supply_order", methods=["POST"])
-def place_supply_order():
-    security.has_role([5, 6])
-    security.has_csrf_token(request.form["csrf_token"])
-
-    company_id_list = list(filter(None, request.form.getlist("company_id")))
-    qty_list = list(filter(None, request.form.getlist("qty")))
-    price_list = list(filter(None, request.form.getlist("price")))
-    item_list = list(filter(None, request.form.getlist("item_id")))
-    user_id = users.get_user_id()
-
-    if len(item_list) != len(price_list) != len(qty_list) != len(company_id_list):
-        flash("One or more values are missing.")
-        return redirect("/supply_order_form")
-
-    orders.create_supply_order(
-        company_id_list, item_list, qty_list, price_list, user_id)
-    return redirect("/supply_order_form")
-
-
 @app.route("/inventory_report", methods=["POST"])
 def inventory_report():
     security.has_role([5, 6])
     security.has_csrf_token(request.form["csrf_token"])
 
     return logistics.inventory_data()
+
+
+@app.route("/create_new_supplier")
+def create_new_supplier():
+    security.has_role([5, 6])
+    return render_template("buyer/buyer_create_new_supplier.html")
