@@ -13,17 +13,21 @@ def item_page_count():
 
 
 def add_item(itemname, price):
+    if "e" in price:
+        flash("Not a valid price.", "danger")
+        return
+
     if float(price) <= 0:
         flash("Price must be larger than zero", "danger")
-        return 0
+        return
 
     if len(itemname) < 3:
         flash("Item name must be longer than two characters", "danger")
-        return 0
+        return
 
     if get_item_by_name(itemname) != None:
         flash("Item named %s already exists" % itemname, "danger")
-        return 0
+        return
 
     sql = "INSERT INTO items (itemname, price) VALUES (:itemname, :price)"
     db.session.execute(sql, {"itemname": itemname, "price": price})
