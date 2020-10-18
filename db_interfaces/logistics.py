@@ -221,13 +221,13 @@ def get_item_qty_from_order(item_id, order_id, batch_nr):
 def collect_to_batchorder(order_id, qty, batch_nr):
     if "e" in qty:
         flash("Invalid quantity", "danger")
-        return False
+        return
 
     qty = int(qty)
 
     if qty <= 0 or qty == '':
         flash("Quantity must be larger than zero", "danger")
-        return False
+        return
 
     sql = """SELECT batches.item_id,
                     orders.item_id
@@ -241,18 +241,20 @@ def collect_to_batchorder(order_id, qty, batch_nr):
 
     if len(valid_order) == 0:
         flash("This item doesn't belong to this order", "danger")
-        return False
+        return
 
-    item_id = get_itemid_by_batchnr(batch_nr)
+    batch = get_batch_by_batchnr(batch_nr)
+    item_id = batch[3]
+    batch_qty = batch[4]
 
     sql = """SELECT orders.qty,
-             batchorders.qty,
-             (orders.qty - batchorders.qty) 
+             SUM(batchorders.qty),
+             (orders.qty - SUM(batchorders.qty)) 
              FROM batchorders 
              JOIN orders ON (orders.order_id = batchorders.order_id) 
              WHERE batchorders.order_id = :order_id 
-             AND batchorders.batch_nr = :batch_nr 
-             AND orders.item_id = :item_id;"""
+             AND orders.item_id = :item_id
+             GROUP BY orders.qty"""
 
     result = db.session.execute(
         sql, {"order_id": order_id, "batch_nr": batch_nr, "item_id": item_id})
@@ -262,24 +264,31 @@ def collect_to_batchorder(order_id, qty, batch_nr):
         verify_qty = get_item_qty_from_order(item_id, order_id, batch_nr)
         if qty > int(verify_qty):
             flash("Collected qty exceed order qty", "danger")
-            return False
+            return
+
+        if batch_qty < qty:
+            qty = batch_qty
 
         create_new_batchorder(item_id, batch_nr, order_id, qty)
-        return True
+        flash("Collected %spc(s) from %s" % (qty, batch_nr), "success")
+        return
 
     else:
         if qty > int(amount[2]):
             flash("Collected qty exceed order qty", "danger")
-            return False
+            return
 
         if int(amount[2]) - qty < 0:
             flash("Collected qty exceed order qty", "danger")
-            return False
+            return
+
+        if batch_qty < qty:
+            qty = batch_qty
 
         add_batchorder_qty(order_id, item_id, qty)
         new_qty = qty * -1
         add_batch_qty(batch_nr, new_qty)
-        return True
+        flash("Collected %spc(s) from %s" % (qty, batch_nr), "success")
 
 
 def create_new_shipment(order_id):
