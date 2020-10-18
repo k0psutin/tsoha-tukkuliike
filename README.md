@@ -1,5 +1,3 @@
-[English version](README_EN.md)
-
 # Tukkuliikkeen tietokannanhallintajärjestelmä
 
 Yksinkertaistettu tukkuliikkeen varaston, sekä osto/myyntitapahtumien hallintajärjestelmä. Järjestelmässä on käyttäjillä eri tasoja riippuen siitä, onko henkilö logistiikassa, myynnissä, ostossa, myyntierien keräilijänä tai kontrolleri. Kontrollerilla on korkein luokitus, eli kontrollerilla on muiden luokkien toimintojen lisäksi mahdollisuus mm. ludoa uusia käyttäjiä. Muuten toiminnot on rajattu niin, että nähdään vain tarvittavat asiat.
@@ -67,8 +65,7 @@ Sovellus:
 
 [x] Tietokanta osio  
 [x] Käyttöohjeet  
-[x] Asennusohje  
-[x] Englanninkielinen versio dokumentaatiosta
+[x] Asennusohje
 
 ## Sovelluksen vaiheet
 
