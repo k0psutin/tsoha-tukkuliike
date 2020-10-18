@@ -34,7 +34,7 @@ Myynti:
 [x] Näkee varastossa olevat tuotteet  
 [x] Pystyy luomaan uusia yrityksiä tietokantaan  
 [x] Pystyy luomaan tunnuksia asiakkaille  
-[x] Voi muokata myyntitilauksia
+[x] Voi muokata myyntitilauksia  
 [x] Näkee valitun vuoden myynnit
 
 Osto:  
