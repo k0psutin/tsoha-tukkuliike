@@ -40,7 +40,7 @@ def create_user():
     quit()
 
 
-def get_user_by_name(username):  # TODO lowercase checks etc...
+def get_user_by_name(username):
     sql = "SELECT username, pswd, auth_lvl FROM users WHERE username=:username"
     result = db.session.execute(sql, {"username": username})
     return result.fetchone()
