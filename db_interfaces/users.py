@@ -65,12 +65,18 @@ def login(username, password):
             session["auth_lvl"] = user[2]
             session["cart"] = []
 
+            # Keeps track of current page number
+
             session["supply"] = 0
             session["sale"] = 0
             session["batch"] = 0
             session["item"] = 0
 
+            # How many rows per page
+
             session["row_count"] = 10
+
+            # Total pages
 
             session["supply_page_count"] = 0
             session["batch_page_count"] = 0

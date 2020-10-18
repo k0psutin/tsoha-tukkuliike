@@ -4,18 +4,21 @@ import db_interfaces.orders as orders
 import db_interfaces.logistics as logistics
 import db_interfaces.item as item
 
+# I tried to refactor these into one function.
+# While it worked in local, Heroku couldn't find some modules.
+
 
 def supply_order_page_count():
     page_count = orders.get_orders_page_count(True)
     if page_count == None:
         page_count = 0
     else:
-        page_count = math.ceil(page_count[0]/10)
+        page_count = math.ceil(page_count[0]/session["row_count"])
 
     if session["supply"] > page_count-1:
         session["supply"] = 0
 
-    session["order_page_count"] = page_count
+    session["supply_page_count"] = page_count
 
 
 def batch_page_count():
@@ -23,7 +26,7 @@ def batch_page_count():
     if page_count == None:
         page_count = 0
     else:
-        page_count = math.ceil(page_count[0]/10)
+        page_count = math.ceil(page_count[0]/session["row_count"])
 
     if session["batch"] > page_count-1:
         session["batch"] = 0
@@ -36,7 +39,7 @@ def sales_page_count():
     if page_count == None:
         page_count = 0
     else:
-        page_count = math.ceil(len(page_count)/10)
+        page_count = math.ceil(len(page_count)/session["row_count"])
 
     if session["sale"] > page_count-1:
         session["sale"] = 0
@@ -49,7 +52,7 @@ def open_order_page_count():
     if page_count == None:
         page_count = 0
     else:
-        page_count = math.ceil(len(page_count)/10)
+        page_count = math.ceil(len(page_count)/session["row_count"])
 
     if session["sale"] > page_count-1:
         session["sale"] = 0
