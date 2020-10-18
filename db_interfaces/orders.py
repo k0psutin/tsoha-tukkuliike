@@ -241,17 +241,17 @@ def get_sales_by_year(year):
     res = result.fetchall()
 
     data = {}
-    x = [0]*13
+    sale_x = [0]*13
     total = 0
 
     for i in range(12):
-        x[i] = 0
+        sale_x[i] = 0
 
     for i in range(len(res)):
-        x[int(res[i][0] - 1)] = str(res[i][1])
+        sale_x[int(res[i][0] - 1)] = str(res[i][1])
         total += res[i][1]
 
-    data["x"] = x
+    data["sale_x"] = sale_x
     data["empty"] = (len(res) == 0)
     data["total"] = str(total)
 

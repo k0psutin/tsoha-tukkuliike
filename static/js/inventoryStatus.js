@@ -8,8 +8,8 @@ $(document).ready(function () {
 
     if (data['supply']) {
       var trace1 = {
-        x: data['supplyX'],
-        y: data['supplyY'],
+        x: data['supply_x'],
+        y: data['supply_y'],
         name: 'Inventory',
         type: 'bar',
       }
@@ -17,8 +17,8 @@ $(document).ready(function () {
 
     if (data['sale']) {
       var trace2 = {
-        x: data['saleX'],
-        y: data['saleY'],
+        x: data['sale_x'],
+        y: data['sale_y'],
         name: 'Sales',
         type: 'bar',
         marker: {

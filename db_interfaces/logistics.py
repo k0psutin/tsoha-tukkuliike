@@ -320,7 +320,7 @@ def inventory_data():
                             FROM batches 
                             FULL JOIN items on (items.item_id = batches.item_id))) q
              GROUP BY items 
-             ORDER BY items;"""
+             ORDER BY items"""
 
     result = db.session.execute(sql)
     supply = result.fetchall()
@@ -329,36 +329,36 @@ def inventory_data():
 
     data["supply"] = (len(supply) != 0)
 
-    supplyX = [0]*len(supply)
-    supplyY = [0]*len(supply)
+    supply_x = [0]*len(supply)
+    supply_y = [0]*len(supply)
 
     for i in range(len(supply)):
-        supplyX[i] = supply[i][0]
-        supplyY[i] = supply[i][1]
+        supply_x[i] = supply[i][0]
+        supply_y[i] = supply[i][1]
 
-    data["supplyX"] = supplyX
-    data["supplyY"] = supplyY
+    data["supply_x"] = supply_x
+    data["supply_y"] = supply_y
 
     sql = """SELECT items.itemname, sum(orders.qty) 
              FROM orders 
              FULL JOIN items ON (orders.item_id = items.item_id) 
              WHERE supply = false 
              GROUP BY items.itemname 
-             ORDER BY itemname;"""
+             ORDER BY itemname"""
 
     result = db.session.execute(sql)
     sale = result.fetchall()
 
-    saleX = [0]*len(sale)
-    saleY = [0]*len(sale)
+    sale_x = [0]*len(sale)
+    sale_y = [0]*len(sale)
 
     data["sale"] = (len(sale) != 0)
 
     for i in range(len(sale)):
-        saleX[i] = sale[i][0]
-        saleY[i] = sale[i][1]
+        sale_x[i] = sale[i][0]
+        sale_y[i] = sale[i][1]
 
-    data["saleX"] = saleX
-    data["saleY"] = saleY
+    data["sale_x"] = sale_x
+    data["sale_y"] = sale_y
 
     return jsonify(data)

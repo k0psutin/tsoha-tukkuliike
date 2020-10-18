@@ -51,7 +51,7 @@ $('#yearlist').change(function () {
       'December',
     ]
 
-    var yValue = data['x']
+    var yValue = data['sale_x']
 
     var trace1 = {
       x: xValue,

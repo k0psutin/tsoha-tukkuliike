@@ -27,8 +27,9 @@ def logout():
 def login():
     username = request.form["username"]
     password = request.form["password"]
-    loggedIn = users.login(username, password)
-    if loggedIn:
+    logged = users.login(username, password)
+
+    if logged:
         return redirect("/")
     else:
         return render_template("user/login.html", username=username)
