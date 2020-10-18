@@ -1,14 +1,12 @@
+[English version](README_EN.md)
+
 # Tukkuliikkeen tietokannanhallintajärjestelmä
 
-Yksinkertaistettu tukkuliikkeen varaston, sekä osto/myyntitapahtumien hallintajärjestelmä. Järjestelmässä on käyttäjillä eri tasoja riippuen siitä, onko henkilö logistiikassa, myynnissä, ostossa, myyntierien keräilijänä tai kontrolleri. Kontrollerilla on korkein luokitus (admin), eli kontrollerilla pääsee käsiksi kaikkiin osa-alueisiin, sekä luomaan uusia käyttäjiä. Muuten toiminnot on rajattu niin, että nähdään vain tarvittavat asiat.
+Yksinkertaistettu tukkuliikkeen varaston, sekä osto/myyntitapahtumien hallintajärjestelmä. Järjestelmässä on käyttäjillä eri tasoja riippuen siitä, onko henkilö logistiikassa, myynnissä, ostossa, myyntierien keräilijänä tai kontrolleri. Kontrollerilla on korkein luokitus, eli kontrollerilla on muiden luokkien toimintojen lisäksi mahdollisuus mm. ludoa uusia käyttäjiä. Muuten toiminnot on rajattu niin, että nähdään vain tarvittavat asiat.
 
-Hallintajärjestelmällä pystytään helposti tekemään yhteenvetoja annetun aikavälin tapahtumista ja seuraamaan realiaikaisesti varaston saldoja sekä eriä.
+Hallintajärjestelmällä pystytään helposti tekemään yhteenvetoja valitsemastaan vuodesta ja seuraamaan realiaikaisesti varaston saldoja sekä eriä.
 
-Tällä järjestelmällä on esimerkiksi mahdollista jäljittää toimintoja kuten että, kuka tilasi kuorman X, mikä tuottaja ja toimitusmaa oli tuotteella X sekä kuka on kerännyt ostajalle Y tuotetta X.
-
-Myytävät tuotteet voidaan myös asettaa suljetuiksi asiakkailta.
-
-### Toiminnot
+## Käyttäjien toiminnot
 
 Osto pystyy luomaan tilauksia muille tukkureille, luomaan uusia tuotteita, sekä luomaan uusia tukkuliikkeitä.
 
@@ -18,20 +16,18 @@ Myynti luo uusia asiakkaita, sekä kirjaa asiakkailta saamiaan hypoteettisia til
 
 Keräily vastaa ostotilausten tuotteiden (oikein) keräämisestä, ja valmiiden tilausten kuittaamisesta.
 
-Kontrolleri pystyy seuraamaan tukun joka osa-aluetta, ja pystyy tarvittaessa muuttamaan tilauksia, varastosaldoja, luomaan uusia myytäviä tavaroita sekä käyttäjiä.
+Kontrolleri pystyy seuraamaan tukun joka osa-aluetta, ja pystyy tarvittaessa muuttamaan varastosaldoja, luomaan uusia tavaroita sekä käyttäjiä.
 
 Myös asiakas voi tilata suoraan tukusta omilla tunnuksillaan.
 
-<br>
-
-### Toteutuneet/suunnitellut toiminnot
+## Toteutuneet/suunnitellut toiminnot
 
 Varasto:  
 [x] Pystyy siirtämään saapuvia tuotteita tukun varastoon  
 [x] Virtuaalinäkymä saapuvista tuotteista  
 [x] Saapuvien tuotteiden inventointi  
-[x] Varaston inventointi  
-<br>
+[x] Varaston inventointi
+
 Myynti:  
 [x] Pystyy luomaan ostotilauksia  
 [x] Näkee kaikki tilaukset  
@@ -41,8 +37,6 @@ Myynti:
 [x] Voi muokata myyntitilauksia (toistaiseksi vain tilauksen poisto ja/tai tuotteen poisto)  
 [x] Näkee valitun vuoden myynnit
 
-<br>
-
 Osto:  
 [x] Pystyy luomaan uusia tuotteita  
 [x] Pystyy näkemään saapuvat tuotteet, sekä varaston tuotteet  
@@ -50,77 +44,54 @@ Osto:
 [x] Pystyy lisäämään uusia tuotteita  
 [x] Näkee yhteenvedon saapuvista, varaston tuotteista sekä myydyistä tuotteista
 
-<br>
-
 Keräily:  
 [x] Pystyy keräämään tuotteita avoimiin tilauksiin  
 [x] Virtuaalinäkymä tukun saldoilla olevista tuotteista  
 [x] Pystyy luomaan lähetyksen kerätystä tilauksesta
 
-<br>
-
 Kontrolleri:  
 [x] Pääsee joka osa-alueelle  
-[x] Voi luoda käyttäjiä
+[x] Voi luoda käyttäjiä  
 [x] Voi muokata varastosaldoja, saapuvien tuotteiden saldoja  
 [x] Näkee yhteenvetoja myynneistä, ostoista jne.
-
-<br>
 
 Asiakas:  
 [x] Voi luoda ostotilauksen  
 [x] Voi vaihtaa salasanansa  
 [x] Saa myyntivahvistuksen tilauksen jättämisen jälkeen.
 
-<br>
-
 Sovellus:  
 [x] Mahdollisuus luoda käyttäjä komentokehotteelta.
 
-### Dokumentaation vaiheet
+## Dokumentaation vaiheet
 
-[x] Tietokanta osio  
-[x] Käyttöohjeet  
-[x] Asennusohje  
-[ ] Englanninkielinen versio
+[x] Tietokanta osio
+[x] Käyttöohjeet
+[x] Asennusohje
+[x] Englanninkielinen versio dokumentaatiosta
 
-### Sovelluksen vaiheet
+## Sovelluksen vaiheet
 
-[x] Runko valmiiksi  
-[x] Syötteiden validointi  
-[x] Varmistusikkuna mm. tilaamiseen.  
+[x] Runko valmiiksi
+[x] Syötteiden validointi
+[x] Varmistusikkuna mm. tilaamiseen.
 [x] Ulkoasu kuntoon
 [x] Graafisia esityksiä myynneistä yms.
 
-### Tiedossa olevia vikoja
-
-- Onnistuneessa lomakkeen lähetyksessä tulee ilmoitus, että tietoja puuttuu. (En ole pystynyt replikoimaan vikaa.)
-
-### Suunniteltuja toimintoja
-
-[ ] Transaktioloki varastosiirroille  
-[ ] Roolien eriytys omaksi taulukseen  
-<br>
-
-### Sovelluksen osoite:
+## Sovelluksen osoite:
 
 [https://sheltered-temple-19572.herokuapp.com/](https://sheltered-temple-19572.herokuapp.com/)
-<br>
 
-### Käyttäjätunnukset:
+## Käyttäjätunnukset:
 
-<br>
-    
-Logistiikka: `varasto/1234`  
-Keräily: `keraily/1234`  
-Osto: `osto/1234`  
-Myynti: `myynti/1234`  
-Kontrolleri: `kontrolleri/1234`  
+Logistiikka: `varasto/1234`
+Keräily: `keraily/1234`
+Osto: `osto/1234`
+Myynti: `myynti/1234`
+Kontrolleri: `kontrolleri/1234`
 Asiakas: `asiakas/1234`
 
-<br>
-
-### Käyttäjätasot
+## Käyttäjätasot
 
 | Taso | Rooli       |
 | :--: | ----------- |
@@ -131,12 +102,8 @@ Asiakas: `asiakas/1234`
 |  5   | osto        |
 |  6   | kontrolleri |
 
-<br>
+## Dokumentaatio
 
-### Dokumentaatio
-
-<br>
-
-[Tietokanta](/doc/db.md)  
-[Käyttöohjeet](/doc/kayttoohje.md)  
+[Tietokanta](/doc/db.md)
+[Käyttöohjeet](/doc/kayttoohje.md)
 [Asennusohje](/doc/asennusohje.md)
